@@ -76,7 +76,7 @@
         @endif
     </div>
     <script>
-        var limit = 2;
+        var limit = 3;
         $('input[class="select-member"]').change(function() {
             if($('input[class="select-member"]:checked').length >= limit+1) {
                 this.checked = false;
