@@ -89,8 +89,8 @@ class JobController extends Controller
             ->select('job.job_id', 'job.department_id', 'department.department_name', 'job.job_name',
                 'job.description', 'job.active_date', 'job.expired_date')
             ->where('job.status', '=', 'open')
-//            ->where('job.active_date','<=', now())
-//            ->where('job.expired_date', '>', now())
+            ->where('job.active_date','<=', now())
+            ->where('job.expired_date', '>', now())
             ->get();
         $dept = Department::all();
 

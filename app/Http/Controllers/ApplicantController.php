@@ -294,7 +294,20 @@ class applicantController extends Controller
 
     public function ShowAllInterview(){
 
-        return view('hr.interview_schedule');
+        $interview = DB::table('interview')
+            ->join('interview_type', 'interview.interview_type_id', '=', 'interview_type.interview_type_id')
+            ->join('applicant', 'applicant.applicant_id', '=', 'interview.applicant_id')
+            ->join('job', 'job.job_id', '=', 'applicant.job_id')
+            ->join('department', 'department.department_id', '=', 'job.department_id')
+            ->join('users', 'users.user_id', '=', 'applicant.user_id')
+            ->select('users.first_name', 'users.last_name', 'users.first_name', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
+            ->where('interviewer_id', '=', Auth::user()->user_id)
+            ->orderBy('interview.interview_datetime', 'asc')
+            ->get();
+
+        return view('hr.interview_schedule')->with([
+            "interviews"=>$interview
+        ]);
     }
 
 }

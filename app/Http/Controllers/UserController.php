@@ -278,7 +278,7 @@ class UserController extends Controller
 
         //print_r($member);
 
-        return view('hr.compare-member')->with([
+        return view('hr.compare_member')->with([
             'members' => $member,
             'experiences' => $experience,
             'educations' => $education,
