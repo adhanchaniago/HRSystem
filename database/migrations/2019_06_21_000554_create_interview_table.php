@@ -20,6 +20,7 @@ class CreateInterviewTable extends Migration
             $table->string('applicant_id', 7)->nullable(true);
             $table->string('interview_venue', 200)->nullable(true);
             $table->string('interview_code', 20)->nullable(true);
+            $table->integer('interview_score')->nullable(true);
             $table->datetime('interview_datetime');
             $table->string('status', 20);
             $table->timestamps();

@@ -47,6 +47,7 @@ Route::post('/member/compare', 'UserController@CompareMember');
 
 
 Route::get('/applicant/all-job', 'JobController@ShowApplicantByJob');
+Route::post('/applicant/compare/{id}', 'ApplicantController@CompareApplicant');
 Route::get('/applicant/list', 'ApplicantController@ShowAllApplicant');
 Route::get('/applicant/{id}', 'ApplicantController@ShowApplicantDetails');
 Route::post('/applicant/reject/{id}', 'ApplicantController@RejectApplicant');
@@ -60,8 +61,15 @@ Route::post('/technical-test/reject/{id}', 'ApplicantController@TechnicalTestRej
 Route::get('/interview/schedule', 'ApplicantController@ShowAllInterview');
 
 Route::get('/interview/{id}', 'ApplicantController@InterviewDetail');
+Route::post('/interview/completed/{id}', 'ApplicantController@InterviewCompleted');
 Route::get('/interview/proceed/{id}', 'ApplicantController@InterviewProceed');
 Route::get('/interview/reject/{id}', 'ApplicantController@InterviewReject');
+Route::get('/interview/session/{code}', 'ApplicantController@InterviewSession');
+
+Route::get('/interview/signer', 'ApplicantController@InterviewSigner');
+
+
+//Route::post('/interview/session/{code}', 'ApplicantController@InterviewSession');
 
 Route::get('/department', 'JobController@ShowAllDepartment');
 Route::get('/department/update/{id}', 'JobController@UpdateDepartment');

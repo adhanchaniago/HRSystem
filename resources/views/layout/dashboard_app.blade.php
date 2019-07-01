@@ -30,6 +30,8 @@
     <script src="/assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js" type="text/javascript"></script>
     <script src="/assets/vendors/jvectormap/jquery-jvectormap-us-aea-en.js" type="text/javascript"></script>
     <script src="/assets/vendors/DataTables/datatables.min.js" type="text/javascript"></script>
+    <script src="/assets/vendors/qrcodejs/qrcode.min.js" type="text/javascript"></script>
+    <script src="/assets/js/scripts/instascan.min.js"></script>
 
     <!-- CORE SCRIPTS-->
     <script src="/assets/js/app.min.js" type="text/javascript"></script>

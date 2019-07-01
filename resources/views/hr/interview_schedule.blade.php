@@ -23,7 +23,11 @@
                         <tr>
                             <th>#</th>
                             <th>Interview Date</th>
-                            <th>Applicant Name</th>
+                            @if(Auth::user()->role_id == 'ROLE001')
+                                <th>Applicant Name</th>
+                            @else
+                                <th>Interviewer Name</th>
+                            @endif
                             <th>Applied Job</th>
                             <th>Interview Method</th>
                             <th>Actions</th>

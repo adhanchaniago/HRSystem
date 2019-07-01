@@ -6,6 +6,36 @@
         }
     </style>
 
+
+    <div class="modal fade" id="completeConfirm">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title"><i class="fa fa-check"></i> Complete Interview</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <form action="{{url("/interview/completed/".$interview->interview_id)}}" method="post">
+                {{csrf_field()}}
+                <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="">Interview Score</label>
+                            <input type="number" class="form-control" name="interview_score" max="100" min="0" required>
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">Complete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="acceptConfirm">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -90,7 +120,7 @@
                             @if($interview->average_score != null)
                                 <h5 class="text-info"><i class="fa fa-check-circle"></i> Technical Test Result</h5>
                                 @if(count($approg)>0)
-                                    <div class="row">
+                                    <div class="row m-b-20">
                                         @foreach($approg as $appr)
                                             <div class="col-md-12">
                                                 <div class="row m-b-5">
@@ -104,37 +134,54 @@
                                                 </div>
                                             </div>
                                         @endforeach
-                                        <div class="col-md-9" style="border-top: solid 1px lightgrey;"></div>
-                                        <div class="col-md-12">
-                                            <div class="row m-b-5 m-t-25">
-                                                <div class="col-md-7">
-                                                    <h6><b>Average Score</b></h6>
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <h3>
-                                                        @if($interview->average_score > 80)
-                                                            <span id="avgScore" class="text-success">
+                                        @if($interview->interview_score == null)
+                                            <div class="col-md-9" style="border-top: solid 1px lightgrey;"></div>
+                                            <div class="col-md-12">
+                                                <div class="row m-b-5 m-t-25">
+                                                    <div class="col-md-7">
+                                                        <h6><b>Average Score</b></h6>
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <h3>
+                                                            @if($interview->average_score > 80)
+                                                                <span id="avgScore" class="text-success">
                                                                 {{$interview->average_score}}
                                                             </span>
-                                                        @elseif($interview->average_score > 60)
-                                                            <span id="avgScore" class="text-warning">
+                                                            @elseif($interview->average_score > 60)
+                                                                <span id="avgScore" class="text-warning">
                                                                 {{$interview->average_score}}
                                                             </span>
-                                                        @else
-                                                            <span id="avgScore" class="text-danger">
+                                                            @else
+                                                                <span id="avgScore" class="text-danger">
                                                                 {{$interview->average_score}}
                                                             </span>
-                                                        @endif
-                                                    </h3>
+                                                            @endif
+                                                        </h3>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @endif
                                     </div>
                                 @else
                                     <div class="text-center">
                                         <h6 class="text-muted">There is no technical test for this applicant</h6>
                                     </div>
                                 @endif
+                            @endif
+                            @if($interview->interview_score != null)
+                                <h5 class="text-info"><i class="fa fa-check-circle"></i> Interview Result</h5>
+                                <div class="row m-b-20">
+                                    <div class="col-md-12">
+                                        <div class="row m-b-5">
+                                            <div class="col-md-7">
+                                                <label for=""><b>Interview Score</b></label>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <h6>{{$interview->interview_score }}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             @endif
                         </div>
                     </div>
@@ -174,15 +221,57 @@
                         </div>
                     </div>
                     @if($interview->status == "scheduled")
-                        @if($interview->interview_venue == null)
+                        @if($interview->interview_venue == null && $interview->interview_code != null)
                             <div class="alert alert-info m-b-10">
                                 The start interview button will appear at the scheduled time. Don't worry, we will notify you on 1 day before interview time.
                                 <br>
                                 <div class="text-right">
                                     <button class="btn btn-success" data-toggle="modal" data-target="#viewQR"><i class="fa fa-qrcode"></i> View Interview Code</button>
+                                    @if(date('Y-m-d h:i:s', strtotime(now().'- 5 hours')) > date('Y-m-d h:i:s', strtotime($interview->interview_datetime)) && date('Y-m-d h:i:s', strtotime(now().'- 5 hours')) < date('Y-m-d h:i:s', strtotime($interview->interview_datetime.'+ 30 minutes')))
+                                        <button class="btn btn-primary" data-toggle="modal" data-target="#scanQR"><i class="fa fa-video-camera"></i> Start Interview Session</button>
+                                        <div class="modal fade" id="scanQR">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title text-warning"><i class="fa fa-warning"></i> Please Pay Attention to This</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+                                                    <!-- Modal body -->
+                                                    <div class="modal-body text-left">
+                                                        <div class="alert alert-info">
+                                                            <h5>Please make sure that you:</h5>
+                                                            <ul>
+                                                                <li>Has a stable internet connection.</li>
+                                                                <li>Has a good audio & video quality.</li>
+                                                                <li>Pick the perfect spot.</li>
+                                                                <li>Sit up and dress professionally.</li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="alert alert-danger">
+                                                            <h5>Please don't:</h5>
+                                                            <ul>
+                                                                <li>Lose focus.</li>
+                                                                <li>Forget to research common interview questions.</li>
+                                                                <li>Forget to follow-up.</li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Modal footer -->
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <form action="/interview/session/{{$interview->interview_code}}" method="get">
+                                                            {{csrf_field()}}
+                                                            <button class="btn btn-primary" type="submit">Start Interview</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="modal fade" id="viewQR">
-                                    <div class="modal-dialog modal-sm">
+                                    <div class="modal-dialog">
                                         <div class="modal-content">
 
                                             <!-- Modal Header -->
@@ -192,7 +281,26 @@
                                             </div>
                                             <!-- Modal body -->
                                             <div class="modal-body">
-                                                <img src="\assets\img\frame.png" width="100%" alt="QRCcode">
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <div id="qrcode"></div>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam asperiores consequatur, corporis cumque deleniti eaque explicabo fugiat fugit, ipsam laudantium odit pariatur sequi similique sint vero! Dolor minima omnis veniam.
+                                                    </div>
+                                                </div>
+
+                                                <script type="text/javascript">
+                                                    var url = window.location.origin;
+                                                    new QRCode(document.getElementById("qrcode"),
+                                                        {
+                                                            text: url+"/interview/session/{{$interview->interview_code}}",
+                                                            border: 4,
+                                                            colorDark : "#000000",
+                                                            colorLight : "#ffffff",
+                                                            correctLevel : QRCode.CorrectLevel.H
+                                                        });
+                                                </script>
                                             </div>
                                             <!-- Modal footer -->
                                             <div class="modal-footer">
@@ -201,9 +309,13 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         @else
                             <div class="text-right m-b-10">
+                                <form action="{{url('/interview/completed/'.$interview->interview_id)}}">
+                                    {{csrf_field()}}
+                                </form>
                                 <button class="btn btn-primary" data-toggle="modal" data-target="#completeConfirm"><i class="fa fa-check"></i> Complete Interview</button>
                             </div>
                         @endif
@@ -216,9 +328,5 @@
                 </div>
             </div>
         </div>
-
     </div>
-
-
-
 @endsection

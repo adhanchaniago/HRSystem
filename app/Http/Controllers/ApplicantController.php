@@ -7,6 +7,7 @@ use App\AppProgress;
 use App\Document;
 use App\Interview;
 use App\InterviewType;
+use App\JobSkill;
 use App\TechnicalTest;
 use App\User;
 use App\Job;
@@ -39,6 +40,8 @@ class applicantController extends Controller
     public function ProceedApplicant($id){
         $applicant = Applicant::find($id);
         $applicant->status = 'apply_pass';
+        $applicant->current_step = 'technical_test';
+
         $applicant->save();
 
         $technicalTest = new TechnicalTest();
@@ -87,6 +90,14 @@ class applicantController extends Controller
 
     public function ShowJobapplicant($id){
 
+        $allapplicants = DB::table('applicant')
+            ->join('users', 'applicant.user_id', '=', 'users.user_id')
+            ->join('job', 'applicant.job_id', '=', 'job.job_id')
+            ->join('department', 'job.department_id', '=', 'department.department_id')
+            ->select('applicant.applicant_id', 'applicant.applied_date', 'applicant.status', 'users.*','job.job_name', 'department.department_name')
+            ->where('applicant.job_id', '=', $id)
+            ->get();
+
         $applicants = DB::table('applicant')
             ->join('users', 'applicant.user_id', '=', 'users.user_id')
             ->join('job', 'applicant.job_id', '=', 'job.job_id')
@@ -116,13 +127,41 @@ class applicantController extends Controller
             ->where('interview.status', '=', 'scheduled')
             ->get();
 
+        $finals = DB::table('interview')
+            ->join('applicant', 'applicant.applicant_id', '=', 'interview.applicant_id')
+            ->join('users', 'applicant.user_id', '=', 'users.user_id')
+            ->join('job', 'applicant.job_id', '=', 'job.job_id')
+            ->join('department', 'job.department_id', '=', 'department.department_id')
+            ->select('interview.interview_id', 'applicant.applicant_id', 'applicant.applied_date', 'applicant.status', 'users.*','job.job_name', 'department.department_name')
+            ->where('applicant.job_id', '=', $id)
+            ->where('interview.status', '=', 'completed')
+            ->get();
+
         $job = Job::find($id);
 
         return view('hr.applicant_list')->with([
+            "allapplicants" => $allapplicants,
             "applicants" => $applicants,
             "job_detail" => $job,
             "technical_test" => $technicalTest,
             "interviews" => $interviews,
+            "finals" => $finals,
+        ]);
+    }
+
+    public function InterviewCompleted(Request $request, $id){
+        $interview = Interview::find($id);
+        $interview->status = 'completed';
+        $interview->interview_score = $request->interview_score;
+        $interview->save();
+
+        $applicant = Applicant::find($interview->applicant_id);
+        $applicant->current_step = 'final_result';
+        $applicant->status = 'wait_final_result';
+        $applicant->save();
+
+        return redirect('/job/'.$applicant->job_id.'/applicants')->with([
+            "success" => "Success set interview as completed."
         ]);
     }
 
@@ -240,6 +279,7 @@ class applicantController extends Controller
             ->first();
 
         $app = Applicant::find($job->applicant_id);
+        $app->current_step = 'interview';
         $app->status = "technical_test_pass";
         $app->save();
 
@@ -293,20 +333,157 @@ class applicantController extends Controller
 
     public function ShowAllInterview(){
 
-        $interview = DB::table('interview')
-            ->join('interview_type', 'interview.interview_type_id', '=', 'interview_type.interview_type_id')
-            ->join('applicant', 'applicant.applicant_id', '=', 'interview.applicant_id')
-            ->join('job', 'job.job_id', '=', 'applicant.job_id')
-            ->join('department', 'department.department_id', '=', 'job.department_id')
-            ->join('users', 'users.user_id', '=', 'applicant.user_id')
-            ->select('users.first_name', 'users.last_name', 'users.first_name', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
-            ->where('interviewer_id', '=', Auth::user()->user_id)
-            ->orderBy('interview.interview_datetime', 'asc')
-            ->get();
+        if (Auth::user()->role_id == 'ROLE001'){
+            $interview = DB::table('interview')
+                ->join('interview_type', 'interview.interview_type_id', '=', 'interview_type.interview_type_id')
+                ->join('applicant', 'applicant.applicant_id', '=', 'interview.applicant_id')
+                ->join('job', 'job.job_id', '=', 'applicant.job_id')
+                ->join('department', 'department.department_id', '=', 'job.department_id')
+                ->join('users', 'users.user_id', '=', 'applicant.user_id')
+                ->select('users.user_id', 'users.first_name', 'users.last_name', 'users.first_name', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
+                ->where('interviewer_id', '=', Auth::user()->user_id)
+                ->where('interview.status', '!=', 'completed')
+                ->orderBy('interview.interview_datetime', 'asc')
+                ->get();
+        }else{
+            $interview = DB::table('interview')
+                ->join('interview_type', 'interview.interview_type_id', '=', 'interview_type.interview_type_id')
+                ->join('applicant', 'applicant.applicant_id', '=', 'interview.applicant_id')
+                ->join('job', 'job.job_id', '=', 'applicant.job_id')
+                ->join('department', 'department.department_id', '=', 'job.department_id')
+                ->join('users', 'users.user_id', '=', 'interview.interviewer_id')
+                ->select('users.user_id', 'users.first_name', 'users.last_name', 'users.first_name', 'applicant.user_id', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
+                ->where('applicant.user_id', '=', Auth::user()->user_id)
+                ->where('interview.status', '!=', 'completed')
+                ->orderBy('interview.interview_datetime', 'asc')
+                ->get();
+        }
 
         return view('hr.interview_schedule')->with([
             "interviews"=>$interview
         ]);
+    }
+
+    public function InterviewSession($code)
+    {
+        $interview = Interview::all()
+            ->where('interview_code', '=', $code)->first();
+
+        $sessionExpired = date('Y-m-d h:i:s', strtotime($interview->interview_datetime . ' + 30 minutes'));
+        $now = date('Y-m-d h:i:s', strtotime(now() . '- 5 hours'));
+
+        if ($interview) {
+            if ($now > date('Y-m-d h:i:s', strtotime($interview->interview_datetime)) && $now < $sessionExpired) {
+                return view('interview_session')->with([
+                    'interview' => $interview,
+                    'session' => 'Start'
+                ]);
+            } elseif ($now < date('Y-m-d h:i:s', strtotime($interview->interview_datetime))) {
+                return view('interview_session')->with([
+                    'interview' => $interview,
+                    'session' => 'Not started'
+                ]);
+            } elseif ($now > $sessionExpired) {
+                return view('interview_session')->with([
+                    'interview' => $interview,
+                    'session' => 'Expired'
+                ]);
+            }
+        } else {
+            return view('interview_session')->with([
+                'session' => 'Invalid code'
+            ]);
+        }
+    }
+
+    public function InterviewSigner(){
+        $secret = 'W62wB9JjW3tFyUMtF5QhRSbk';
+        $hmac = hash_hmac('sha256', file_get_contents('php://input'), $secret, TRUE);
+        $hmac = base64_encode($hmac);
+
+        return $hmac;
+    }
+
+    public function CompareApplicant(Request $request, $id){
+
+        $jobSkills = JobSkill::all()->where('job_id', '=', $id);
+        $applicant = DB::table('applicant')
+            ->join('users', 'users.user_id', '=', 'applicant.user_id')
+            ->join('user_skill', 'applicant.user_id', '=', 'user_skill.user_id')
+            ->whereIn('applicant_id', $request->compare)
+            ->where('job_id', '=', $id)
+            ->select('users.*', 'user_skill.skill_name', 'user_skill.rate', 'applicant.applicant_id')
+            ->get();
+
+        $tempApplicant = array();
+        foreach ($applicant as $app) {
+            $skillName = $app->skill_name;
+            $skillRate = $app->rate;
+
+            $score = 100;
+            $totalScore = 0;
+            //$otherSkillScore = 0;
+            $jobRate = 0;
+            foreach ($jobSkills as $jbs) {
+                if ($jbs->skill_name == $skillName) {
+                    //$totalScore += $skillRate*
+                    $jobRate += $jbs->rate;
+                    //break;
+                }
+                $score -= $jbs->rate;
+            }
+
+            if ($jobRate > 0) {
+                $totalScore += $skillRate * $jobRate;
+            } else {
+                if ($score > 0) {
+                    $totalScore += $skillRate * $score;
+                } else {
+                    $totalScore += $skillRate * 1;
+                }
+            }
+            $app->score = $totalScore;
+            array_push($tempApplicant,$app);
+
+        }
+
+        $new_arr = [];
+        $new_arr = $this->SumScoreByApplicantId($tempApplicant);
+
+        //Sorting output descending berdasarkan score
+        usort($new_arr, function ($a, $b) {
+            return  $b->score - $a->score;
+        });
+
+//        $member = User::all()->whereIn('user_id', $request->member);
+//        $education = UserEducation::all()->whereIn('user_id', $request->member);
+//        $experience = UserExperience::all()->whereIn('user_id', $request->member);
+//        $skill = UserSkill::all()->whereIn('user_id', $request->member);
+
+        //print_r($member);
+
+        return view('hr.compare_applicant')->with([
+            'members' => $new_arr,
+//            'experiences' => $experience,
+//            'educations' => $education,
+//            'skills' => $skill
+        ]);
+
+        //print_r($applicant);
+        //return view('hr.compare_applicant');
+    }
+
+    public function SumScoreByApplicantId($data) {
+        $groups = array();
+        foreach ($data as $item) {
+            $key = $item->applicant_id;
+            if (!array_key_exists($key, $groups)) {
+                $groups[$key] = $item;
+            } else {
+                $groups[$key]->score = $groups[$key]->score + $item->score;
+            }
+        }
+        return $groups;
     }
 
 }

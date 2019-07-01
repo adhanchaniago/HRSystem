@@ -221,7 +221,7 @@ class JobController extends Controller
                 ->join('user_skill', 'applicant.user_id', '=', 'user_skill.user_id')
                 ->select('users.*', 'user_skill.skill_name', 'user_skill.rate', 'applicant.applicant_id', 'applicant.job_id', 'applicant.recruiter_id', 'applicant.applied_date', 'applicant.current_step')
                 ->where('applicant.job_id', '=', $jb->job_id)
-                //->where('applicant.status', '=', 'waiting')
+                ->where('applicant.status', 'not like', '%fail%')
                 //->limit(5)
                 ->get();
 
@@ -254,57 +254,14 @@ class JobController extends Controller
                 $app->score = $totalScore;
                 array_push($tempApplicant,$app);
 
-                //print ($app->applicant_id.' score: '.$app->score.'##');
-
-//                if (count($tempApplicant) > 0) {
-//                    foreach ($tempApplicant as $temp) {
-//                        if ($temp->user_id == $app->user_id && $temp->job_id && $app->job_id) {
-//                            $temp->score += $totalScore;
-//                            //$temp->save();
-//                            //break;
-//                        } else {
-//                            $app->score = $totalScore;
-//                            $tempApplicant[] = $app;
-//                        }
-//                    }
-//                } else {
-//                    $app->score = $totalScore;
-//                    //array_push($tempApplicant, $app);
-//                    $tempApplicant[] = $app;
-//                    //brr
-//                }
             }
         }
 
 
         $new_arr = [];
-//        $new_arr2 = [];
-//        //$tempApplicantArray = (array)$tempApplicant;
-//        foreach ($tempApplicant as $temp) {
-//            if (count($new_arr) == 0) {
-//                $new_arr[] = $temp;
-//            } else {
-//                foreach($new_arr as $arr){
-//                    //$new_arr[] = ["status"=>"true"];
-//                    //print "true";
-//                    if($arr->applicant_id == $temp->applicant_id){
-//                        $arr->score = $arr->score + $temp->score;
-//                    }else{
-//                        $new_arr[] = $temp;
-//                    }
-//                    break;
-//                }
-//            }
-//        }
-
         $new_arr = $this->SumScoreByApplicantId($tempApplicant);
 
-
-
-        //print("<pre>".print_r($new_arr,true)."</pre>");
-
-//
-//        //Sorting output descending berdasarkan score
+        //Sorting output descending berdasarkan score
         usort($new_arr, function ($a, $b) {
             return  $b->score - $a->score;
         });

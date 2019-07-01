@@ -36,9 +36,10 @@ function CheckAppliedJob($user_id, $job_id){
 }
 
 function GetLatestID($table_name){
-    $data = DB::table($table_name)->orderBy($table_name.'_id', 'desc')->first();
+    $table_id = $table_name.'_id';
+    $data = DB::table($table_name)->orderBy($table_id, 'desc')->first();
 
-    if(count($data)> 0){
+    if($data){
         return intval(substr($data->{$table_name.'_id'}, 3));
     }
     return 0;
