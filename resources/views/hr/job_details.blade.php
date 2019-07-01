@@ -6,62 +6,59 @@
         }
     </style>
 
-    <div class="ibox">
-        <div class="ibox-head">
-            <div class="ibox-title">Job Information</div>
-            <div class="ibox-tools">
-                <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
-                <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
-            </div>
-        </div>
-        <div class="ibox-body">
-            <div class="row">
-                <div class="col-md-3">
-
+    <div class="row">
+        <div class="col-md-8">
+            <div class="ibox">
+                <div class="ibox-head">
+                    <div class="ibox-title">Job Information</div>
+                    <div class="ibox-tools">
+                        <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                        <a class="fullscreen-link"><i class="fa fa-expand"></i></a>
+                    </div>
                 </div>
-                <div class="col-md-9">
-                    <div class="m-t-10">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <h2>{{$job->job_name}}</h2>
-                                <h5 class="text-muted">{{$job->department_name}}</h5>
+                <div class="ibox-body">
+                    <div>
+                        <div class="m-t-10">
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <h2>{{$job->job_name}}</h2>
+                                    <h5 class="text-muted">{{$job->department_name}}</h5>
+                                </div>
+                                <div class="col-md-5">
+                                    <h6>Salary</h6>
+                                    <div class="text-success">
+                                        <h3>Rp {{number_format($job->salary)}}</h3>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <h5>Salary</h5>
-                                <div class="text-success">
-                                    <h2>Rp {{number_format($job->salary)}}</h2>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-7">
+                                <h5><b>Description</b></h5>
+                                <div class="m-t-5">
+                                    <textarea class="border-0" cols="40" rows="5" wrap="hard" readonly="readonly">{{$job->description}}</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <h5><b>Priority Skill</b></h5>
+                                <div class="m-t-5">
+                                    <ul>
+                                        @foreach($skills as $index=>$skill)
+                                            <li>{{$skill->skill_name}}</li>
+                                        @endforeach
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5><b>Description</b></h5>
-                            <div class="m-t-5">
-                                <textarea class="border-0" cols="40" rows="5" wrap="hard" readonly="readonly">{{$job->description}}</textarea>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <h5><b>Priority Skill</b></h5>
-                            <div class="m-t-5">
-                                <ul>
-                                    @foreach($skills as $index=>$skill)
-                                        <li>{{$skill->skill_name}}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
+                    <div class="text-right m-b-10">
+                        <button class="btn btn-secondary"><i class="fa fa-pencil"></i> Edit Job</button>
+                        <a class="btn btn-danger" href="{{url('/job/deactive-job/'.$job->job_id)}}"><i class="fa fa-times"></i> Deactive Job</a>
                     </div>
                 </div>
             </div>
-            <div class="text-right m-b-10">
-                <button class="btn btn-secondary"><i class="fa fa-pencil"></i> Edit Job</button>
-                <a class="btn btn-danger" href="{{url('/job/deactive-job/'.$job->job_id)}}"><i class="fa fa-times"></i> Deactive Job</a>
-            </div>
         </div>
-    </div>
-    <div class="row">
         <div class="col-md-4">
             <div class="ibox">
                 <div class="ibox-head">
@@ -116,58 +113,7 @@
                     @endif
                 </div>
             </div>
-            <div class="ibox">
-                <div class="ibox-head">
-                    <div class="ibox-title">Interview Option</div>
-                    <div class="ibox-tools">
-                        <button class="btn btn-default btn-xs"><i class="fa fa-pencil font-14"></i></button>
-                    </div>
-                </div>
-                <div class="ibox-body">
-                    <ul>
-                        <li>Audio Call</li>
-                        <li>Video Call</li>
-                        <li>F2F</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8">
-            <div class="ibox">
-                <div class="ibox-head">
-                    <div class="ibox-title">Applied Applicant</div>
-                </div>
-                <div class="ibox-body">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Fullname</th>
-                            <th>Progress</th>
-                            <th>Applied Date</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @if(count($applicant) > 0)
-                            @foreach($applicant as $idx=>$app)
-                                <tr>
-                                    <td>{{$idx+1}}</td>
-                                    <td>{{$app->first_name." ".$app->last_name}}</td>
-                                    <td>{{$app->current_step}}</td>
-                                    <td>{{$app->applied_date}}</td>
-                                </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <td colspan="4">There is no applicant yet.</td>
-                            </tr>
-                        @endif
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </div>
     </div>
-
 
 @endsection

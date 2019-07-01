@@ -35,7 +35,7 @@
                                 <tr>
                                     <td>{{$idx+1}}</td>
                                     <td>{{$interview->interview_datetime}}</td>
-                                    <td>{{$interview->first_name.$interview->last_name}}</td>
+                                    <td>{{$interview->first_name.' '.$interview->last_name}}</td>
                                     <td>{{$interview->job_name}}</td>
                                     <td>{{$interview->interview_type_name}}</td>
                                     <td>

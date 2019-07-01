@@ -36,14 +36,18 @@
                                     @php($totalJob = 0)
                                     @if(count($applicants) > 0)
                                         @foreach($applicants as $idx=>$app)
-                                            @if($app->job_id == $job->job_id)
-                                                <tr>
-                                                    <td>#{{$idx+1}}</td>
-                                                    <td>{{$app->first_name.' '.$app->last_name}}</td>
-                                                    <td>{{$app->applied_date}}</td>
-                                                    <td>{{$app->score}}</td>
-                                                </tr>
-                                                @php($totalJob++)
+                                            @if($totalJob == 5)
+                                                @break
+                                            @else
+                                                @if($app->job_id == $job->job_id)
+                                                    @php($totalJob++)
+                                                    <tr>
+                                                        <td>#{{$totalJob}}</td>
+                                                        <td>{{$app->first_name.' '.$app->last_name}}</td>
+                                                        <td>{{$app->applied_date}}</td>
+                                                        <td>{{$app->score}}</td>
+                                                    </tr>
+                                                @endif
                                             @endif
                                         @endforeach
                                     @endif

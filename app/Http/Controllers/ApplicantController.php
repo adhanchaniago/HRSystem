@@ -291,7 +291,6 @@ class applicantController extends Controller
         ]);
     }
 
-
     public function ShowAllInterview(){
 
         $interview = DB::table('interview')
