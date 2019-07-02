@@ -45,6 +45,21 @@
                                         <label for="">Job Description</label>
                                         <textarea name="job_desc" id="job_desc" cols="40" rows="5" wrap="hard" class="form-control" required></textarea>
                                     </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="">Minimum Age</label>
+                                                <input type="number" name="min_age" placeholder="Minimum Age" class="form-control" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="">Minimum Experience</label>
+                                                <input type="number" name="min_exp" placeholder="Minimum Experience" class="form-control" required>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group">
                                         <label for="">Priority Skill</label>
                                         <div class="input_fields_wrap">

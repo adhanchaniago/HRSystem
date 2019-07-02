@@ -42,6 +42,8 @@ class JobController extends Controller
         $job->job_id = $job_id;
         $job->department_id = $request->job_department;
         $job->job_name = $request->job_name;
+        $job->minimum_age = $request->min_age;
+        $job->minimum_experience = $request->min_exp;
         $job->description = $request->job_desc;
         $job->salary = $request->salary;
         $job->active_date = $request->active_date;

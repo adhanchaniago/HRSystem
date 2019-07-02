@@ -14,6 +14,9 @@ class DatabaseSeeder extends Seeder
         // $this->call(UsersTableSeeder::class);
         $this->call([
             RoleSeeder::class,
+            DepartmentSeeder::class,
+            UserSeeder::class,
+            DocumentTypeSeeder::class,
         ]);
     }
 }

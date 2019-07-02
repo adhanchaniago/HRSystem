@@ -414,23 +414,29 @@ class applicantController extends Controller
             ->where('job_id', '=', $id)
             ->select('users.*', 'user_skill.skill_name', 'user_skill.rate', 'applicant.applicant_id')
             ->get();
+        $job = Job::find($id);
 
+        $totalSkill = $jobSkills->count();
         $tempApplicant = array();
+        $minJobScore = 0;
+        $minAge = $job->minimum_age;
+        $minExp = $job->minimum_experience;
+
         foreach ($applicant as $app) {
             $skillName = $app->skill_name;
             $skillRate = $app->rate;
 
             $score = 100;
             $totalScore = 0;
-            //$otherSkillScore = 0;
             $jobRate = 0;
             foreach ($jobSkills as $jbs) {
                 if ($jbs->skill_name == $skillName) {
-                    //$totalScore += $skillRate*
                     $jobRate += $jbs->rate;
-                    //break;
                 }
                 $score -= $jbs->rate;
+                $jrate = $jbs->rate * ($jbs->rate/2);
+
+                $minJobScore = $minJobScore + $jrate;
             }
 
             if ($jobRate > 0) {
@@ -444,7 +450,6 @@ class applicantController extends Controller
             }
             $app->score = $totalScore;
             array_push($tempApplicant,$app);
-
         }
 
         $new_arr = [];
@@ -455,22 +460,66 @@ class applicantController extends Controller
             return  $b->score - $a->score;
         });
 
-//        $member = User::all()->whereIn('user_id', $request->member);
-//        $education = UserEducation::all()->whereIn('user_id', $request->member);
-//        $experience = UserExperience::all()->whereIn('user_id', $request->member);
-//        $skill = UserSkill::all()->whereIn('user_id', $request->member);
+        $jsAvg = $minJobScore/$totalSkill;
+        foreach ($new_arr as $idx => $na){
+            $gain = 0;
+            $experience = UserExperience::all()->where('user_id', '=', $na->user_id);
+            //$userAge = now('')
+            $diff = abs(strtotime(now()) - strtotime($na->birth_date));
+            $age = floor($diff / (365*60*60*24));
+            $totalExp = 0;
+            foreach($experience as $exp){
+                $date1 = strtotime($exp->period_start);
+                $date2 = strtotime($exp->period_end);
 
-        //print_r($member);
+                // Formulate the Difference between two dates
+                $diff = abs($date2 - $date1);
+
+                // To get the year divide the resultant date into
+                // total seconds in a year (365*60*60*24)
+                $years = floor($diff / (365*60*60*24));
+                $totalExp += $years;
+                //print $years."+";
+            }
+            //print "total: ".$totalExp;
+
+
+
+            if($na->score >= $jsAvg){
+                $gain++;
+                if($totalExp >= $minExp){
+                    $gain++;
+                    if($age >= $minAge){
+                        $gain++;
+                    }
+                }else{
+                    if($age >= $minAge){
+                        $gain++;
+                    }
+                }
+            }
+            else
+            {
+                if($totalExp >= $minExp){
+                    $gain++;
+                    if($age >= $minAge){
+                        $gain++;
+                    }
+                }else{
+                    if($age >= $minAge){
+                        $gain++;
+                    }
+                }
+            }
+
+
+            $na->gain = $gain;
+            //print $age."//";
+        }
 
         return view('hr.compare_applicant')->with([
             'members' => $new_arr,
-//            'experiences' => $experience,
-//            'educations' => $education,
-//            'skills' => $skill
         ]);
-
-        //print_r($applicant);
-        //return view('hr.compare_applicant');
     }
 
     public function SumScoreByApplicantId($data) {

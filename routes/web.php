@@ -33,7 +33,6 @@ Route::post('/job/apply-job', 'ApplicantController@ApplyJob');
 Route::post('/job/add-new-job', 'JobController@AddNewJob');
 Route::get('/job/active', 'JobController@ShowActiveJob');
 Route::get('/job/inactive', 'JobController@ShowInactiveJob');
-//Route::get('/job/applicants', function(){ return view('hr.job_applicants'); });
 Route::get('/job/{id}/applicants', 'ApplicantController@ShowJobApplicant');
 
 Route::get('/job/details/{id}', 'JobController@JobDetail');
@@ -86,4 +85,3 @@ Route::get('/logout', 'UserController@UserLogout');
 Route::post('/login', 'UserController@UserSignIn');
 Route::post('/register', 'UserController@UserRegister');
 
-//Route::get('/home', 'HomeController@index')->name('home');

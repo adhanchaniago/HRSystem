@@ -14,12 +14,20 @@
     <link href="assets/css/main.css" rel="stylesheet" />
     <!-- PAGE LEVEL STYLES-->
     <link href="./assets/css/pages/auth-light.css" rel="stylesheet" />
+
+    <style>
+        body{
+            background: url('/assets/img/bg.jpg') no-repeat center center fixed;
+        }
+    </style>
 </head>
 
-<body class="bg-silver-300">
+<body>
 <div class="content">
     <div class="brand">
-        <a class="link" href="index.html">AdminCAST</a>
+        <a class="link" href="{{url('/')}}">
+            <img src="/assets/img/tfinder.png" alt="logo" width="50%">
+        </a>
     </div>
     @yield('content-form')
 </div>

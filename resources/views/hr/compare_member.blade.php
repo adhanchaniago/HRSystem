@@ -9,7 +9,12 @@
                         <div class="ibox-body">
                             <div class="text-center">
                                 <div class="m-20">
-                                    <div class="rounded-img-xl" style="background-image: url('@if(isset($member->photo_url)) {{$member->photo_url}} @else /assets/img/admin-avatar.png @endif')"></div></div>
+                                    @if($member->photo_url != null || $member->photo_url != "")
+                                        <div class="rounded-img-xl" style="background-image: url('{{$member->photo_url}}')"></div>
+                                    @else
+                                        <div class="rounded-img-xl" style="background-image: url('/assets/img/admin-avatar.png')"></div>
+                                    @endif
+                                </div>
                                 <h3><b>{{$member->first_name." ".$member->last_name}}</b></h3>
                                 <h5>{{$member->degree.', '.$member->major}}</h5>
                                 <h5 class="text-info">{{$member->university}}</h5>

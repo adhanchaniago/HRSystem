@@ -25,7 +25,7 @@
                     <form action="{{url('/member/compare')}}" method="post">
                         {{csrf_field()}}
                         <div class="modal-body">
-                            <table class="table table-striped">
+                            <table class="table table-striped toDataTable">
                                 <thead>
                                     <tr>
                                         <th>Member Name</th>
@@ -60,7 +60,12 @@
                             <div class="ibox-body">
                                 <div class="text-center">
                                     <div class="m-20">
-                                        <div class="rounded-img-lg" style="background-image: url('@if(isset($app->photo_url)) {{$app->photo_url}} @else /assets/img/admin-avatar.png @endif')"></div></div>
+                                        @if($app->photo_url != null || $app->photo_url != "")
+                                            <div class="rounded-img-lg" style="background-image: url('{{$app->photo_url}}')"></div>
+                                        @else
+                                            <div class="rounded-img-lg" style="background-image: url('/assets/img/admin-avatar.png')"></div>
+                                        @endif
+                                    </div>
                                     <h5><b>{{$app->first_name." ".$app->last_name}}</b></h5>
                                     <h6 class="text-muted">{{$app->email}}</h6>
                                 </div>
@@ -76,7 +81,7 @@
         @endif
     </div>
     <script>
-        var limit = 3;
+        var limit = 4;
         $('input[class="select-member"]').change(function() {
             if($('input[class="select-member"]:checked').length >= limit+1) {
                 this.checked = false;
@@ -84,5 +89,7 @@
             console.log($('input[class="select-member"]:checked').length);
             console.log(limit);
         });
+
+        $(".toDataTable").DataTable();
     </script>
 @endsection

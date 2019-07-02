@@ -13,7 +13,6 @@
                         </div>
                         <h5 class="font-strong m-b-10 m-t-10">{{Auth::user()->first_name." ".Auth::user()->last_name}}</h5>
                         <div class="m-b-10 text-muted">{{Auth::user()->role}}</div>
-                        <div class="m-b-20 text-muted">Registered on {{date_format(Auth::user()->created_at, 'F Y')}}</div>
                         <div class="profile-social m-b-20">
                             <a href="#" data-toggle="tooltip" data-placement="top" title="{{Auth::user()->email}}"><i class="fa fa-envelope"></i></a>
                             <a href="#" data-toggle="tooltip" data-placement="top" title="{{Auth::user()->phone}}"><i class="fa fa-phone"></i></a>
@@ -260,15 +259,17 @@
                                         <div class="row">
                                             <div class="col-md-8">
                                                 <div class="row">
-                                                    <div class="col-sm-4 form-group">
+                                                    <div class="col-sm-12 form-group">
                                                         <label><b>University</b></label>
                                                         <input class="form-control" type="text" name="university" placeholder="University" value="{{Auth::user()->university}}" required>
                                                     </div>
-                                                    <div class="col-sm-4 form-group">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-6 form-group">
                                                         <label><b>Major</b></label>
                                                         <input class="form-control" type="text" name="major" placeholder="Major" value="{{Auth::user()->major}}" required>
                                                     </div>
-                                                    <div class="col-sm-4 form-group">
+                                                    <div class="col-sm-6 form-group">
                                                         <label><b>Degree</b></label>
                                                         <input class="form-control" type="text" name="degree" placeholder="Degree" value="{{Auth::user()->degree}}" required>
                                                     </div>

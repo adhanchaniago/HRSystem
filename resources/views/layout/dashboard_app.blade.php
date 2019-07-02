@@ -185,7 +185,13 @@
                 </li>
                 <li class="dropdown dropdown-user">
                     <a class="nav-link dropdown-toggle link" data-toggle="dropdown">
-                        <div class="rounded-img-sm" style="background-image: url('@if(Auth::user()->photo_url) {{Auth::user()->photo_url}} @else /assets/img/admin-avatar.png @endif')"></div>
+
+                        @if(Auth::user()->photo_url != null || Auth::user()->photo_url != "")
+                            <div class="rounded-img-sm" style="background-image: url('{{Auth::user()->photo_url}}')"></div>
+                        @else
+                            <div class="rounded-img-sm" style="background-image: url('/assets/img/admin-avatar.png')"></div>
+                        @endif
+
                         <span></span>@if(\Auth::check()){{Auth::user()->first_name}}@endif<i class="fa fa-angle-down m-l-5"></i></a>
                     <ul class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="{{url('/profile')}}"><i class="fa fa-user"></i>Profile</a>

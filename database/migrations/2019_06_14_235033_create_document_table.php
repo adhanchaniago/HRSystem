@@ -17,7 +17,7 @@ class CreateDocumentTable extends Migration
             $table->string('document_id', 7)->primary();
             $table->string('user_id',7)->nullable(true);
             $table->string('document_name',100);
-            $table->string('document_type',50);
+            $table->string('document_type_id',7)->nullable(true);
             $table->string('document_url',200);
 
             $table->timestamps();
@@ -25,6 +25,11 @@ class CreateDocumentTable extends Migration
             $table->foreign('user_id')
                 ->references('user_id')
                 ->on('users')
+                ->onDelete('cascade');
+
+            $table->foreign('document_type_id')
+                ->references('document_type_id')
+                ->on('document_type')
                 ->onDelete('cascade');
         });
     }

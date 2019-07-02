@@ -15,7 +15,6 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->string('user_id', 7)->primary();
-            $table->string('department_id', 7)->nullable(true);
 
             $table->string('first_name',20);
             $table->string('last_name', 20);
@@ -40,16 +39,10 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
 
-            $table->foreign('department_id')
-                ->references('department_id')
-                ->on('department')
-                ->onDelete('set null');
-
             $table->foreign('role_id')
                 ->references('role_id')
                 ->on('role')
                 ->onDelete('set null');
-
         });
     }
 

@@ -21,6 +21,8 @@ class CreateJobTable extends Migration
             $table->string('job_name',50);
             $table->string('description',200);
             $table->integer('salary')->nullable(true);
+            $table->integer('minimum_age')->nullable(true);
+            $table->integer('minimum_experience')->nullable(true);
             $table->date('active_date');
             $table->date('expired_date');
             $table->string('status',50);
