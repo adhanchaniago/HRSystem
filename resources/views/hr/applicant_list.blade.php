@@ -82,7 +82,11 @@
                                             <div class="ibox-body">
                                                 <div class="row">
                                                     <div class="col-md-3">
-                                                        <div class="rounded-img-md" style="background-image: url('@if(isset($app->photo_url)) {{$app->photo_url}} @else /assets/img/admin-avatar.png @endif')"></div>
+                                                        @if($app->photo_url != null || $app->photo_url != "")
+                                                            <div class="rounded-img-md" style="background-image: url('{{$app->photo_url}}')"></div>
+                                                        @else
+                                                            <div class="rounded-img-md" style="background-image: url('/assets/img/admin-avatar.png')"></div>
+                                                        @endif
                                                     </div>
                                                     <div class="col-md-9">
                                                         <h6><b>{{$app->first_name." ".$app->last_name}}</b></h6>
@@ -118,7 +122,11 @@
                                         <div class="ibox-body">
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <div class="rounded-img-md" style="background-image: url('@if(isset($tech->photo_url)) {{$tech->photo_url}} @else /assets/img/admin-avatar.png @endif')"></div>
+                                                    @if($tech->photo_url != null || $tech->photo_url != "")
+                                                        <div class="rounded-img-md" style="background-image: url('{{$tech->photo_url}}')"></div>
+                                                    @else
+                                                        <div class="rounded-img-md" style="background-image: url('/assets/img/admin-avatar.png')"></div>
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-9">
                                                     <h6><b>{{$tech->first_name." ".$tech->last_name}}</b></h6>
@@ -154,7 +162,11 @@
                                         <div class="ibox-body">
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <div class="rounded-img-md" style="background-image: url('@if(isset($app->photo_url)) {{$app->photo_url}} @else /assets/img/admin-avatar.png @endif')"></div>
+                                                    @if($intv->photo_url != null || $intv->photo_url != "")
+                                                        <div class="rounded-img-md" style="background-image: url('{{$intv->photo_url}}')"></div>
+                                                    @else
+                                                        <div class="rounded-img-md" style="background-image: url('/assets/img/admin-avatar.png')"></div>
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-9">
                                                     <h6><b>{{$intv->first_name." ".$intv->last_name}}</b></h6>
@@ -190,7 +202,11 @@
                                         <div class="ibox-body">
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <div class="rounded-img-md" style="background-image: url('@if(isset($app->photo_url)) {{$app->photo_url}} @else /assets/img/admin-avatar.png @endif')"></div>
+                                                    @if($fin->photo_url != null || $fin->photo_url != "")
+                                                        <div class="rounded-img-md" style="background-image: url('{{$fin->photo_url}}')"></div>
+                                                    @else
+                                                        <div class="rounded-img-md" style="background-image: url('/assets/img/admin-avatar.png')"></div>
+                                                    @endif
                                                 </div>
                                                 <div class="col-md-9">
                                                     <h6><b>{{$fin->first_name." ".$fin->last_name}}</b></h6>

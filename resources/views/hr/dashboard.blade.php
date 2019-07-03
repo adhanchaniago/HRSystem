@@ -7,32 +7,32 @@
                 <div class="col-lg-3 col-md-6">
                     <div class="ibox bg-success color-white widget-stat">
                         <div class="ibox-body">
-                            <h2 class="m-b-5 font-strong">201</h2>
-                            <div class="m-b-5">NEW APPLICANT</div><i class="ti-shopping-cart widget-stat-icon"></i>
+                            <h2 class="m-b-5 font-strong">{{$members}}</h2>
+                            <div class="m-b-5">REGISTERED MEMBER</div><i class="ti-pencil-alt widget-stat-icon"></i>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <div class="ibox bg-info color-white widget-stat">
                         <div class="ibox-body">
-                            <h2 class="m-b-5 font-strong">1250</h2>
-                            <div class="m-b-5">APPLICANT RESPONDED</div><i class="ti-bar-chart widget-stat-icon"></i>
+                            <h2 class="m-b-5 font-strong">{{$applicants}}</h2>
+                            <div class="m-b-5">APPLICANTS</div><i class="ti-user widget-stat-icon"></i>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <div class="ibox bg-warning color-white widget-stat">
                         <div class="ibox-body">
-                            <h2 class="m-b-5 font-strong">$1570</h2>
-                            <div class="m-b-5">APPLICANT ACCEPTED</div><i class="fa fa-money widget-stat-icon"></i>
+                            <h2 class="m-b-5 font-strong">{{$accepted}}</h2>
+                            <div class="m-b-5">APPLICANT ACCEPTED</div><i class="ti-check-box widget-stat-icon"></i>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
                     <div class="ibox bg-danger color-white widget-stat">
                         <div class="ibox-body">
-                            <h2 class="m-b-5 font-strong">108</h2>
-                            <div class="m-b-5">APPLICANT DECLINED</div><i class="ti-user widget-stat-icon"></i>
+                            <h2 class="m-b-5 font-strong">{{$rejected}}</h2>
+                            <div class="m-b-5">APPLICANT REJECTED</div><i class="ti-close widget-stat-icon"></i>
                         </div>
                     </div>
                 </div>
@@ -60,17 +60,23 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($referals as $ref)
+                                    @if(count($referals)>0)
+                                        @foreach($referals as $ref)
+                                            <tr>
+                                                <td>{{$ref->first_name." ".$ref->last_name}}</td>
+                                                <td>{{$ref->job_name}}</td>
+                                                <td>{{$ref->department_name}}</td>
+                                                <td>
+                                                    <span class="badge badge-primary">{{$ref->status}}</span>
+                                                </td>
+                                                <td>{{$ref->applied_date}}</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
                                         <tr>
-                                            <td>{{$ref->first_name." ".$ref->last_name}}</td>
-                                            <td>{{$ref->job_name}}</td>
-                                            <td>{{$ref->department_name}}</td>
-                                            <td>
-                                                <span class="badge badge-primary">{{$ref->status}}</span>
-                                            </td>
-                                            <td>{{$ref->applied_date}}</td>
+                                            <td colspan="5">There is no applicant refer to you</td>
                                         </tr>
-                                    @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>

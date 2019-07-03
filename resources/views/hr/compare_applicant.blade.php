@@ -31,7 +31,7 @@
                             </div>
                             @if($member->gain >= 2)
                                 <div class="alert alert-success text-center">
-                                    <i class="fa fa-check"></i> This Applicant is quilified based on this job criteria.
+                                    <h4 class="text-warning"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></h4> This Applicant is quilified based on this job criteria.
                                 </div>
                             @endif
                             <div class="text-center">

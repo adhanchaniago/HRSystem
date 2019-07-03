@@ -51,24 +51,14 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>Mark Ruffalo</td>
-                                                    <td>1 April 2019</td>
-                                                    <td class="text-success"><i class="fa fa-check"></i> Accepted</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>2</td>
-                                                    <td>Robert Downey Jr</td>
-                                                    <td>3 April 2019</td>
-                                                    <td class="text-info"><i class="fa fa-clock-o"></i> Waiting for Action</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>3</td>
-                                                    <td>Deddy Corbuzier</td>
-                                                    <td>28 March 2019</td>
-                                                    <td class="text-danger"><i class="fa fa-times"></i> Rejected</td>
-                                                </tr>
+                                                @foreach($interview as $idx => $intv)
+                                                    <tr>
+                                                        <td>{{$idx++}}</td>
+                                                        <td>{{$intv->first_name.' '.$intv->last_name}}</td>
+                                                        <td>{{$intv->interview_datetime}}</td>
+                                                        <td>{{$intv->status}}</td>
+                                                    </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>

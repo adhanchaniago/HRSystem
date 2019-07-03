@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Applicant;
 use App\Document;
 use App\DocumentType;
+use App\Interview;
 use App\Job;
 use App\UserEducation;
 use App\UserExperience;
@@ -212,6 +213,16 @@ class UserController extends Controller
 
     public function ShowDashboard(){
 
+        $members = User::all()->where('role_id', '=', 'ROLE002')->count();
+        $applicants = Applicant::all()->count();
+        $accepted = DB::table('applicant')->where([
+            ['status', 'not like', '%fail%'],
+            ['status', '!=', 'waiting']
+        ])->count();
+
+        $rejected = DB::table('applicant')->where('status', 'like', '%fail%')->count();
+
+
         $referals = DB::table('applicant')
             ->join('users', 'applicant.user_id', '=', 'users.user_id')
             ->join('job', 'applicant.job_id', '=', 'job.job_id')
@@ -240,8 +251,12 @@ class UserController extends Controller
         return view('hr.dashboard')->with([
             "referals" => $referals,
             "jobs" => $newJob,
-            "applications" => $applicant
-            ]);
+            "applications" => $applicant,
+            "members" => $members,
+            "applicants" => $applicants,
+            "accepted" => $accepted,
+            "rejected" => $rejected
+        ]);
     }
 
     public function ShowAllMember(){
@@ -260,12 +275,39 @@ class UserController extends Controller
         $skill = UserSkill::all()->where('user_id', '=', $id);
         $docType = DocumentType::all();
 
+        if (Auth::user()->role_id == 'ROLE001'){
+            $interview = DB::table('interview')
+                ->join('interview_type', 'interview.interview_type_id', '=', 'interview_type.interview_type_id')
+                ->join('applicant', 'applicant.applicant_id', '=', 'interview.applicant_id')
+                ->join('job', 'job.job_id', '=', 'applicant.job_id')
+                ->join('department', 'department.department_id', '=', 'job.department_id')
+                ->join('users', 'users.user_id', '=', 'applicant.user_id')
+                ->select('users.user_id', 'users.first_name', 'users.last_name', 'users.first_name', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
+                ->where('interviewer_id', '=', Auth::user()->user_id)
+                ->where('interview.status', '=', 'completed')
+                ->orderBy('interview.interview_datetime', 'asc')
+                ->get();
+        }else{
+            $interview = DB::table('interview')
+                ->join('interview_type', 'interview.interview_type_id', '=', 'interview_type.interview_type_id')
+                ->join('applicant', 'applicant.applicant_id', '=', 'interview.applicant_id')
+                ->join('job', 'job.job_id', '=', 'applicant.job_id')
+                ->join('department', 'department.department_id', '=', 'job.department_id')
+                ->join('users', 'users.user_id', '=', 'interview.interviewer_id')
+                ->select('users.user_id', 'users.first_name', 'users.last_name', 'users.first_name', 'applicant.user_id', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
+                ->where('applicant.user_id', '=', Auth::user()->user_id)
+                ->where('interview.status', '=', 'completed')
+                ->orderBy('interview.interview_datetime', 'asc')
+                ->get();
+        }
+
         return view('hr.profile')->with([
             'documents' => $documents,
             'experiences' => $experience,
             'educations' => $education,
             'skills' => $skill,
-            'docType' => $docType
+            'docType' => $docType,
+            'interview' => $interview
         ]);
     }
 

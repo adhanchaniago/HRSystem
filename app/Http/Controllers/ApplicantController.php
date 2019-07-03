@@ -512,7 +512,6 @@ class applicantController extends Controller
                 }
             }
 
-
             $na->gain = $gain;
             //print $age."//";
         }
