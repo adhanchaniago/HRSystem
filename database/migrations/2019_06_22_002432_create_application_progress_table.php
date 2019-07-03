@@ -17,6 +17,7 @@ class CreateApplicationProgressTable extends Migration
             $table->string('application_progress_id', 7)->primary();
             $table->string('job_id', 7)->nullable(true);
             $table->string('progress_name', 50)->nullable(true);
+            $table->string('attachment_url', 200)->nullable(true);
             $table->integer('sequence')->nullable(true);
             $table->timestamps();
 

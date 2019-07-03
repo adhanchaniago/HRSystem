@@ -71,24 +71,28 @@
 
                                     <!-- Modal Header -->
                                     <div class="modal-header">
-                                        <h4 class="modal-title"><i class="fa fa-plus"></i> Add Progress</h4>
+                                        <h4 class="modal-title"><i class="fa fa-plus"></i> Add Technical Test</h4>
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                     </div>
 
-                                    <form action="{{url("/job/add-application-progress/".$job->job_id)}}" method="post">
+                                    <form action="{{url("/job/add-application-progress/".$job->job_id)}}" method="post" enctype="multipart/form-data">
                                     {{csrf_field()}}
                                     <!-- Modal body -->
                                         <div class="modal-body">
                                             <div class="form-group">
                                                 <label for="">Application Progress</label>
-                                                <div class="row m-b-15">
+                                                <div class="row m-b-10">
                                                     <div class="col-md-8">
                                                         <input type="text" name="progress_name" placeholder="Progress Name" class="form-control" required>
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <input type="number" name="sequence" placeholder="Sequence" min="0" max="6" class="form-control" required>
+                                                        <input type="number" name="sequence" placeholder="Sequence" class="form-control" required>
                                                     </div>
                                                 </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="">Attachment</label>
+                                                <input type="file" name="attachment" placeholder="Attachment" class="form-control" required>
                                             </div>
                                         </div>
 
@@ -105,11 +109,20 @@
                 </div>
                 <div class="ibox-body">
                     @if(count($progress))
-                        <ol>
-                            @foreach($progress as $prog)
-                                <li>{{$prog->progress_name}}</li>
-                            @endforeach
-                        </ol>
+                        @foreach($progress as $prog)
+                            <div class="row m-b-5">
+                                <div class="col-md-2">
+                                    {{$prog->sequence}}.
+                                </div>
+                                <div class="col-md-6">
+                                    {{$prog->progress_name}}
+                                </div>
+                                <div class="col-md-4">
+                                    <a href="{{$prog->attachment_url}}" class="btn btn-info btn-xs" download="{{$prog->progress_name}}"><i class="fa fa-download"></i></a>
+                                    <a href="/job/delete-progress/{{$prog->application_progress_id}}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></a>
+                                </div>
+                            </div>
+                        @endforeach
                     @endif
                 </div>
             </div>

@@ -18,6 +18,11 @@ Route::get('/login', function(){return view('auth.login');});
 Route::get('/register', function(){return view('auth.register');});
 
 
+Route::get('/report', 'ReportController@ShowReport');
+Route::get('/mailbox', 'UserController@ShowMailbox');
+Route::post('/add-task', 'UserController@AddTask');
+
+
 Route::get('/profile', 'UserController@ShowProfile');
 Route::post('/profile/update-info', 'UserController@UpdatePersonalInfo');
 Route::post('/profile/upload-document', 'DocumentController@UploadDocument');
@@ -39,7 +44,9 @@ Route::get('/job/details/{id}', 'JobController@JobDetail');
 Route::get('/job/deactive-job/{id}', 'JobController@DeactiveJob');
 Route::post('/job/reactive-job/{id}', 'JobController@ReactiveJob');
 Route::get('/job/delete-job/{id}', 'JobController@DeleteJob');
+Route::get('/job/delete-progress/{id}', 'JobController@DeleteProgress');
 
+Route::get('/technical-test', 'JobController@ShowTechnicalTest');
 
 Route::get('/member/list', 'UserController@ShowAllMember');
 Route::post('/member/compare', 'UserController@CompareMember');

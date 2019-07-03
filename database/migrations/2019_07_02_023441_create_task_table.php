@@ -18,6 +18,7 @@ class CreateTaskTable extends Migration
             $table->string('user_id', 7)->nullable(true);
             $table->string('task_description', 100);
             $table->date('task_date');
+            $table->string('status', 20)->nullable(true);
             $table->timestamps();
 
             $table->foreign('user_id')

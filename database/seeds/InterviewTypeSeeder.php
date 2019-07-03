@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class RoleSeeder extends Seeder
+class InterviewTypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,16 +11,15 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        //
-        DB::table('role')->insert([
+        DB::table('interview_type')->insert([
             [
-                'role_id' => "ROLE001",
-                'role_name' => "Recruitment Unit",
+                'interview_type_id' => "ITY0001",
+                'interview_type_name' => "Face to Face",
                 'created_at' => now('Asia/Jakarta'),
                 'updated_at' => now('Asia/Jakarta')
             ], [
-                'role_id' => "ROLE002",
-                'role_name' => "Applicant",
+                'interview_type_id' => "ITY0002",
+                'interview_type_name' => "Online Interview",
                 'created_at' => now('Asia/Jakarta'),
                 'updated_at' => now('Asia/Jakarta')
             ]

@@ -7,6 +7,8 @@ use App\Document;
 use App\DocumentType;
 use App\Interview;
 use App\Job;
+use App\Message;
+use App\Task;
 use App\UserEducation;
 use App\UserExperience;
 use App\UserSkill;
@@ -215,13 +217,13 @@ class UserController extends Controller
 
         $members = User::all()->where('role_id', '=', 'ROLE002')->count();
         $applicants = Applicant::all()->count();
-        $accepted = DB::table('applicant')->where([
-            ['status', 'not like', '%fail%'],
-            ['status', '!=', 'waiting']
-        ])->count();
-
+        $accepted = DB::table('applicant')->where('status', '=', 'accepted')->count();
         $rejected = DB::table('applicant')->where('status', 'like', '%fail%')->count();
 
+        $task = DB::table('task')->where('user_id', '=', Auth::user()->user_id)
+            ->where('task_date', '>', now())
+            ->orderBy('task_date', 'asc')
+            ->limit(5)->get();
 
         $referals = DB::table('applicant')
             ->join('users', 'applicant.user_id', '=', 'users.user_id')
@@ -255,7 +257,8 @@ class UserController extends Controller
             "members" => $members,
             "applicants" => $applicants,
             "accepted" => $accepted,
-            "rejected" => $rejected
+            "rejected" => $rejected,
+            "tasks" => $task
         ]);
     }
 
@@ -325,6 +328,31 @@ class UserController extends Controller
             'experiences' => $experience,
             'educations' => $education,
             'skills' => $skill
+        ]);
+    }
+
+    public function AddTask(Request $request){
+        $task = new Task();
+        $task->task_id = GenerateId('task', 'TSK');
+        $task->user_id = Auth::user()->user_id;
+        $task->task_description = $request->task_desc;
+        $task->task_date = $request->task_date;
+        $task->save();
+
+        return redirect()->back()->with([
+            "success" => "Success Add New Task"
+        ]);
+    }
+
+    public function ShowMailbox(){
+
+        $mails = DB::table('message')->where([
+            ['from', '=', Auth::user()->user_id],
+            ['to', '=', Auth::user()->user_id],
+        ])->get();
+
+        return view('mailbox')->with([
+            "mails" => $mails
         ]);
     }
 

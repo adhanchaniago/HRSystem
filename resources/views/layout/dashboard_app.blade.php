@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width initial-scale=1.0">
-    <title>Admincast | Dashboard</title>
+    <title>Talent Finder</title>
     <!-- GLOBAL MAINLY STYLES-->
     <link href="/assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
@@ -17,6 +17,7 @@
     <!-- THEME STYLES-->
     <link href="/assets/css/main.min.css" rel="stylesheet" />
     <link href="/assets/css/hover-min.css" rel="stylesheet" />
+    <link href="/assets/css/animate.css" rel="stylesheet" />
     <!-- PAGE LEVEL STYLES-->
 
     <script src="/assets/vendors/jquery/dist/jquery.min.js" type="text/javascript"></script>
@@ -38,19 +39,20 @@
     <!-- PAGE LEVEL SCRIPTS-->
     <script src="/assets/js/scripts/dashboard_1_demo.js" type="text/javascript"></script>
 
+
     @yield('script')
 </head>
 
 <body class="fixed-navbar">
-<div class="page-wrapper">
+<div class="page-wrapper" id="particles-js">
     <!-- START HEADER-->
     <header class="header">
         <div class="page-brand">
             <a class="link" href="{{url('/dashboard')}}">
-                    <span class="brand">HR
-                        <span class="brand-tip">System</span>
+                    <span class="brand"><img src="/assets/img/tfinder.png" width="60px" height="45px" alt="">
+                        <span class="brand-tip">Talent Finder</span>
                     </span>
-                <span class="brand-mini">HRS</span>
+                <span class="brand-mini"><img src="/assets/img/tfinder.png" alt=""></span>
             </a>
         </div>
         <div class="flexbox flex-1">
@@ -79,7 +81,7 @@
                         <li class="dropdown-menu-header">
                             <div>
                                 <span><strong>9 New</strong> Messages</span>
-                                <a class="pull-right" href="mailbox.html">view all</a>
+                                <a class="pull-right" href="{{url('/mailbox')}}">view all</a>
                             </div>
                         </li>
                         <li class="list-group list-group-divider scroller" data-height="240px" data-color="#71808f">
@@ -284,7 +286,7 @@
 
                     <li class="heading">MISCELLANEOUS</li>
                     <li>
-                        <a href="#"><i class="sidebar-item-icon fa fa-bar-chart"></i>
+                        <a href="{{url('/report')}}"><i class="sidebar-item-icon fa fa-bar-chart"></i>
                             <span class="nav-label">Report</span>
                         </a>
                     </li>
@@ -343,7 +345,7 @@
         @yield('content')
 
         <footer class="page-footer">
-            <div class="font-13">2018 © <b>AdminCAST</b> - All rights reserved.</div>
+            <div class="font-13">2019 © <b>Talent Finder</b> - All rights reserved.</div>
             <div class="to-top"><i class="fa fa-angle-up"></i></div>
         </footer>
     </div>

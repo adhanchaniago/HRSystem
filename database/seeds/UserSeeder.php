@@ -30,6 +30,8 @@ class UserSeeder extends Seeder
                 'degree' => "S1",
                 'role_id' => "ROLE001",
                 'photo_url' => "",
+                'created_at' => now('Asia/Jakarta'),
+                'updated_at' => now('Asia/Jakarta')
             ], [
                   "user_id"=> "USR0002",
                   "first_name"=> "Enrico",
@@ -45,7 +47,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0003",
@@ -62,7 +66,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0004",
@@ -79,7 +85,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0005",
@@ -96,7 +104,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0006",
@@ -113,7 +123,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0007",
@@ -130,7 +142,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0008",
@@ -147,7 +161,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0009",
@@ -164,7 +180,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0010",
@@ -181,7 +199,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0011",
@@ -198,7 +218,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0012",
@@ -215,7 +237,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0013",
@@ -232,7 +256,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0014",
@@ -249,7 +275,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0015",
@@ -266,7 +294,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0016",
@@ -283,7 +313,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0017",
@@ -300,7 +332,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0018",
@@ -317,7 +351,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0019",
@@ -334,7 +370,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0020",
@@ -351,7 +389,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0021",
@@ -368,7 +408,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0022",
@@ -385,7 +427,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0023",
@@ -402,7 +446,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0024",
@@ -419,7 +465,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0025",
@@ -436,7 +484,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0026",
@@ -453,7 +503,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0027",
@@ -470,7 +522,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0028",
@@ -487,7 +541,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0029",
@@ -504,7 +560,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ], [
                   "user_id"=> "USR0030",
@@ -521,7 +579,9 @@ class UserSeeder extends Seeder
                   "major" => "",
                   "degree" => "",
                   "role_id" => "ROLE002",
-                  "photo_url" => ""
+                  "photo_url" => "",
+                  'created_at' => now('Asia/Jakarta'),
+                  'updated_at' => now('Asia/Jakarta')
 
                 ]
 

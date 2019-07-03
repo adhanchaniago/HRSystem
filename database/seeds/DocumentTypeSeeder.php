@@ -15,23 +15,23 @@ class DocumentTypeSeeder extends Seeder
             [
                 'document_type_id' => "DTY0001",
                 'document_type_name' => "CV",
-                'created_at' => now(),
-                'updated_at' => now()
+                'created_at' => now('Asia/Jakarta'),
+                'updated_at' => now('Asia/Jakarta')
             ], [
                 'document_type_id' => "DTY0002",
                 'document_type_name' => "Certificate",
-                'created_at' => now(),
-                'updated_at' => now()
+                'created_at' => now('Asia/Jakarta'),
+                'updated_at' => now('Asia/Jakarta')
             ], [
                 'document_type_id' => "DTY0003",
                 'document_type_name' => "Test Answers",
-                'created_at' => now(),
-                'updated_at' => now()
+                'created_at' => now('Asia/Jakarta'),
+                'updated_at' => now('Asia/Jakarta')
             ], [
                 'document_type_id' => "DTY0004",
                 'document_type_name' => "Test Questions",
-                'created_at' => now(),
-                'updated_at' => now()
+                'created_at' => now('Asia/Jakarta'),
+                'updated_at' => now('Asia/Jakarta')
             ]
         ]);
     }

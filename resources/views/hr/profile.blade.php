@@ -41,47 +41,33 @@
                                 <div class="tab-pane fade show active" id="tab-1">
                                     <div class="m-t-30">
                                         <h4 class="text-info m-b-20 m-t-20"><i class="fa fa-history"></i> Interview History</h4>
-                                        <table class="table table-condensed m-b-30">
-                                            <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Applicant Name</th>
-                                                <th>Interview Date</th>
-                                                <th>Status</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
+                                        @if(count($interview)>0)
+                                            <table class="table table-condensed m-b-30">
+                                                <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Applicant Name</th>
+                                                    <th>Interview Date</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
                                                 @foreach($interview as $idx => $intv)
                                                     <tr>
-                                                        <td>{{$idx++}}</td>
+                                                        <td>{{$idx+1}}</td>
                                                         <td>{{$intv->first_name.' '.$intv->last_name}}</td>
                                                         <td>{{$intv->interview_datetime}}</td>
                                                         <td>{{$intv->status}}</td>
                                                     </tr>
                                                 @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div>
-                                        <h4 class="text-info m-b-20 m-t-20"><i class="fa fa-briefcase"></i> Work Experience</h4>
-                                        <table class="table table-striped table-hover">
-                                            <thead>
-                                            <tr>
-                                                <th>Company Name</th>
-                                                <th>Department</th>
-                                                <th>Position</th>
-                                                <th>Duration</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>PT Alim Jaya Motor</td>
-                                                    <td>Human Resource and Development</td>
-                                                    <td>Head of Division</td>
-                                                    <td>March 2015 - May 2019</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                                </tbody>
+                                            </table>
+                                        @else
+                                            <div class="alert alert-warning">
+                                                You've never attend to an interview before.
+                                            </div>
+                                        @endif
+
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="tab-2">

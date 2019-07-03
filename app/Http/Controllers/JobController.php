@@ -57,7 +57,7 @@ class JobController extends Controller
         $appProgress = new AppProgress();
         $appProgress->application_progress_id = GenerateId('application_progress', 'APR');
         $appProgress->job_id = $job_id;
-        $appProgress->progress_name = "Writting Test";
+        $appProgress->progress_name = "Initial Test";
         $appProgress->sequence = 1;
         $appProgress->save();
 
@@ -134,7 +134,7 @@ class JobController extends Controller
         $progress = DB::table('application_progress')
             //->select('*')
             ->where('job_id', '=', $id)
-            ->orderBy('sequence', 'asc')
+            ->orderBy('application_progress_id', 'asc')
             ->get();
 
         return view('hr.job_details')->with(
@@ -288,15 +288,61 @@ class JobController extends Controller
     }
 
     public function AddApplicationProgress(Request $request, $id){
+
+        $sequenceCheck = true;
+        $progress = DB::table('application_progress')->where([
+            ['job_id', '=', $id],
+            ['sequence', '=', $request->sequence]
+        ])->get();
+
+        if(count($progress)>0){
+            return redirect('/job/details/'.$id)->with([
+                'error' => 'Sequence '.$request->sequence.' already taken by another progress.'
+            ]);
+        }
+
         $app = new AppProgress();
         $app->application_progress_id = GenerateId('application_progress', 'APR');
         $app->job_id = $id;
         $app->progress_name = $request->progress_name;
         $app->sequence = $request->sequence;
+
+        if($request->hasFile('attachment')){
+            $doc = $request->file('attachment');
+            $namafile = $app->application_progress_id.'_'.str_replace(' ','_',$request->progress_name).'.'.$doc->getClientOriginalExtension(); /*Membuat nama foto berdasarkan nama pengguna*/
+            $doc->move(public_path('/documents/test_attachment/'), $namafile); /*Memindahkan foto ke direktori assets/images/users*/
+            $app->attachment_url = '/documents/test_attachment/'.$namafile;
+        }
+
         $app->save();
 
         return redirect('/job/details/'.$id)->with([
             'success' => 'Add Progress Success!'
+        ]);
+    }
+
+    public function DeleteProgress($id){
+        $app = AppProgress::find($id);
+        $job_id = $app->job_id;
+        unlink(substr($app->attachment_url, 1));
+        $app->delete();
+        return redirect('/job/details/'.$job_id)->with([
+            'success' => 'Delete Progress Success!'
+        ]);
+
+    }
+
+    public function ShowTechnicalTest(){
+
+        $technical = DB::table('technical_test')
+            ->join('applicant', 'technical_test.applicant_id', '=', 'applicant.applicant_id')
+            ->join('users', 'applicant.user_id', '=', 'users.user_id')
+            ->join('job', 'applicant.job_id', '=', 'job.job_id')
+            ->select('users.first_name', 'users.last_name', 'job.job_name', 'applicant.applied_date', 'technical_test.*')
+            ->get();
+
+        return view('hr.technical_test')->with([
+            "technical" => $technical
         ]);
     }
 
