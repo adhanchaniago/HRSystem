@@ -21,7 +21,8 @@ Route::get('/register', function(){return view('auth.register');});
 Route::get('/report', 'ReportController@ShowReport');
 Route::get('/mailbox', 'UserController@ShowMailbox');
 Route::post('/add-task', 'UserController@AddTask');
-
+Route::post('/mailbox/new-message', 'UserController@ComposeMessage');
+Route::get('/mailbox/{id}', 'UserController@ShowMessageDetails');
 
 Route::get('/profile', 'UserController@ShowProfile');
 Route::post('/profile/update-info', 'UserController@UpdatePersonalInfo');

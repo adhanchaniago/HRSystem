@@ -346,14 +346,48 @@ class UserController extends Controller
 
     public function ShowMailbox(){
 
-        $mails = DB::table('message')->where([
-            ['from', '=', Auth::user()->user_id],
-            ['to', '=', Auth::user()->user_id],
-        ])->get();
+        $mails = DB::table('message')
+            ->where('from', '=', Auth::user()->user_id)
+            ->join('users', 'message.from', '=', 'users.user_id')
+            ->orWhere('to', 'like', '%'.Auth::user()->email.'%')
+            ->select('users.first_name', 'users.last_name', 'message.*')
+            ->get();
+
+        $mail_not_read = DB::table('message')
+            ->where([
+                ['to', 'like', '%'.Auth::user()->email.'%'],
+                ['status', '=', 'not_read']
+            ])->get()->count();
 
         return view('mailbox')->with([
-            "mails" => $mails
+            "mails" => $mails,
+            "mail_not_read" => $mail_not_read
         ]);
+    }
+
+    public function ComposeMessage(Request $request){
+        $message = new Message();
+        $message->message_id = GenerateId('message', 'MSG');
+        $message->from = Auth::user()->user_id;
+        $message->to = $request->to;
+        $message->subject = $request->subject;
+        $message->body = $request->body;
+        $message->status = "not_read";
+        $message->save();
+
+        return redirect()->back()->with([
+           "success" => "Message Sent!"
+        ]);
+    }
+
+    public function ShowMessageDetails($id){
+        $message = Message::find($id);
+        if($message->status != "read"){
+            $message->status = "read";
+            $message->save();
+        }
+
+        return redirect()->back();
     }
 
 }
