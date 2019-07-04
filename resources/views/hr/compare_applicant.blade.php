@@ -30,8 +30,42 @@
                                 </div>
                             </div>
                             @if($member->gain >= 2)
-                                <div class="alert alert-success text-center">
-                                    <h4 class="text-warning"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></h4> This Applicant is quilified based on this job criteria.
+
+                                <div class="alert alert-success">
+                                    <h6><i class="fa fa-check"></i>&nbsp;This Applicant is qualified based on this job criteria.</h6>
+                                    <div class="row">
+                                        <div class="col-md-3">Skill Score</div>
+                                        <div class="col-md-1">:</div>
+                                        <div class="col-md-8">{{$member->score}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">Experience</div>
+                                        <div class="col-md-1">:</div>
+                                        <div class="col-md-8">{{$member->exp}} Years</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">Age</div>
+                                        <div class="col-md-1">:</div>
+                                        <div class="col-md-8">{{$member->age}}</div>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="alert alert-warning">
+                                    <div class="row">
+                                        <div class="col-md-3">Skill Score</div>
+                                        <div class="col-md-1">:</div>
+                                        <div class="col-md-8">{{$member->score}}</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">Experience</div>
+                                        <div class="col-md-1">:</div>
+                                        <div class="col-md-8">{{$member->exp}} Years</div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">Age</div>
+                                        <div class="col-md-1">:</div>
+                                        <div class="col-md-8">{{$member->age}}</div>
+                                    </div>
                                 </div>
                             @endif
                             <div class="text-center">

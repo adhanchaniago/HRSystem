@@ -483,8 +483,6 @@ class applicantController extends Controller
             }
             //print "total: ".$totalExp;
 
-
-
             if($na->score >= $jsAvg){
                 $gain++;
                 if($totalExp >= $minExp){
@@ -512,8 +510,9 @@ class applicantController extends Controller
                 }
             }
 
+            $na->exp = $totalExp;
+            $na->age = $age;
             $na->gain = $gain;
-            //print $age."//";
         }
 
         return view('hr.compare_applicant')->with([

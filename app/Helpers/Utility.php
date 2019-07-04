@@ -47,12 +47,12 @@ function GetLatestID($table_name){
 
 function GenerateId($table_name, $id_prefix){
     $id = "";
-    $data = DB::table($table_name)->orderByDesc('created_at')->first();
-
-    $table_id = strval($table_name).'_id';
-
     if($table_name == 'users'){
+        $data = DB::table($table_name)->orderByDesc('user_id')->first();
         $table_id = 'user_id';
+    }else{
+        $data = DB::table($table_name)->orderByDesc($table_name.'_id')->first();
+        $table_id = strval($table_name).'_id';
     }
 
     if(!$data){

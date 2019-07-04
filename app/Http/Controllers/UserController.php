@@ -346,21 +346,30 @@ class UserController extends Controller
 
     public function ShowMailbox(){
 
-        $mails = DB::table('message')
-            ->where('from', '=', Auth::user()->user_id)
+        $inbox = DB::table('message')
             ->join('users', 'message.from', '=', 'users.user_id')
-            ->orWhere('to', 'like', '%'.Auth::user()->email.'%')
+            ->where('to', 'like', '%'.Auth::user()->email.'%')
+            ->select('users.first_name', 'users.last_name', 'message.*')
+            ->get();
+
+        $sent = DB::table('message')
+            ->join('users', 'message.from', '=', 'users.user_id')
+            ->where('from', '=', Auth::user()->user_id)
             ->select('users.first_name', 'users.last_name', 'message.*')
             ->get();
 
         $mail_not_read = DB::table('message')
+            ->join('users', 'message.from', '=', 'users.user_id')
             ->where([
                 ['to', 'like', '%'.Auth::user()->email.'%'],
                 ['status', '=', 'not_read']
-            ])->get()->count();
+            ])
+            ->select('users.first_name', 'users.last_name', 'users.photo_url', 'message.*')
+            ->get();
 
         return view('mailbox')->with([
-            "mails" => $mails,
+            "inboxes" => $inbox,
+            "sents" => $sent,
             "mail_not_read" => $mail_not_read
         ]);
     }
@@ -381,13 +390,22 @@ class UserController extends Controller
     }
 
     public function ShowMessageDetails($id){
-        $message = Message::find($id);
-        if($message->status != "read"){
-            $message->status = "read";
-            $message->save();
+
+        $msg = Message::find($id);
+        if($msg->status != "read" && strpos($msg->to, Auth::user()->email) != 1){
+            $msg->status = "read";
+            $msg->save();
         }
 
-        return redirect()->back();
+        $message = DB::table('message')
+            ->join('users', 'message.from', '=', 'users.user_id')
+            ->where('message_id', '=', $id)
+            ->select('users.first_name', 'users.last_name', 'users.photo_url','message.*')
+            ->first();
+
+        return view('mailbox_message')->with([
+            "message" => $message
+        ]);
     }
 
 }

@@ -5,7 +5,7 @@
             cursor: pointer;
         }
         .clickable-row:hover{
-            background-color: whitesmoke !important;
+            background-color: darkgrey !important;
         }
     </style>
     
@@ -67,81 +67,129 @@
                 <h6 class="m-t-10 m-b-10">FOLDERS</h6>
                 <ul class="list-group list-group-divider inbox-list">
                     <li class="list-group-item">
-                        <a href="javascript:;"><i class="fa fa-inbox"></i> Inbox @if($mail_not_read > 0)({{$mail_not_read}})@endif
+                        <a href="#tab-1" data-toggle="tab"><i class="fa fa-inbox"></i> Inbox @if(count($mail_not_read) > 0)({{count($mail_not_read)}})@endif
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="javascript:;"><i class="fa fa-envelope-o"></i> Sent</a>
+                        <a href="#tab-2" data-toggle="tab"><i class="fa fa-paper-plane"></i> Sent</a>
                     </li>
                     <li class="list-group-item">
-                        <a href="javascript:;"><i class="fa fa-star-o"></i> Important
+                        <a href="#tab-3" data-toggle="tab"><i class="fa fa-star-o"></i> Important
                         </a>
                     </li>
                     <li class="list-group-item">
-                        <a href="javascript:;"><i class="fa fa-file-text-o"></i> Drafts</a>
-                    </li>
-                    <li class="list-group-item">
-                        <a href="javascript:;"><i class="fa fa-trash-o"></i> Trash</a>
+                        <a href="#tab-4" data-toggle="tab"><i class="fa fa-trash-o"></i> Trash</a>
                     </li>
                 </ul>
             </div>
-            <div class="col-lg-9 col-md-8">
-                <div class="ibox p-20" id="mailbox-container">
-                    <div class="mailbox-header">
-                        <div class="d-flex justify-content-between">
-                            <h5 class="d-none d-lg-block inbox-title"><i class="fa fa-envelope-o m-r-5"></i> Inbox @if($mail_not_read > 0)({{$mail_not_read}})@endif</h5>
-                        </div>
-                        <div class="d-flex justify-content-between inbox-toolbar p-10">
-                            <div class="d-flex">
-                                <div id="inbox-actions">
-                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-original-title="Mark all as read"><i class="fa fa-eye"></i></button>
-                                    <button class="btn btn-default btn-sm" data-toggle="tooltip" data-original-title="Move all to trash"><i class="fa fa-trash-o"></i></button>
+            <div class="col-lg-9 col-md-8 tab-content">
+                <div class="tab-pane fade show active" id="tab-1">
+                    <div class="ibox p-20" id="mailbox-container">
+                        <div class="mailbox-header">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="d-none d-lg-block inbox-title"><i class="fa fa-envelope-o m-r-5"></i> Inbox @if(count($mail_not_read) > 0)({{count($mail_not_read)}})@endif</h5>
+                            </div>
+                            <div class="d-flex justify-content-between inbox-toolbar p-10">
+                                <div class="d-flex">
+                                    <div id="inbox-actions">
+                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-original-title="Mark all as read"><i class="fa fa-eye"></i></button>
+                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-original-title="Move all to trash"><i class="fa fa-trash-o"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="mailbox clf">
-                        <table class="table table-hover table-inbox" id="table-inbox">
-                            <tbody class="rowlinkx" data-link="row">
-                            @if(count($mails) > 0)
-                                @php($counter = 0)
-                                @foreach($mails as $idx => $mail)
-                                    @if(strpos($mail->to, Auth::user()->email) != 1)
-                                        @if($mail->status != "read")
-                                            <tr data-id="{{$idx+1}}" class="clickable-row" data-href="/mailbox/{{$mail->message_id}}" style="background-color: lightgrey">
+                        <div class="mailbox clf">
+                            <table class="table table-hover table-inbox" id="table-inbox">
+                                <tbody class="rowlinkx" data-link="row">
+                                @if(count($inboxes) > 0)
+                                    @php($counter = 0)
+                                    @foreach($inboxes as $idx => $inbox)
+                                        @if($inbox->status != "read")
+                                            <tr data-id="{{$idx+1}}" class="clickable-row" data-href="/mailbox/{{$inbox->message_id}}" style="background-color: lightgrey">
                                         @else
-                                            <tr data-id="{{$idx+1}}" class="clickable-row" data-href="/mailbox/{{$mail->message_id}}" style="background-color: whitesmoke">
+                                            <tr data-id="{{$idx+1}}" class="clickable-row" data-href="/mailbox/{{$inbox->message_id}}" style="background-color: whitesmoke">
                                                 @endif
                                                 <td>
-                                                    @if($mail->status != "read")
+                                                    @if($inbox->status != "read")
                                                         <i class="fa fa-envelope"></i>
                                                     @else
                                                         <i class="fa fa-envelope-open"></i>
                                                     @endif
                                                 </td>
-                                                <td>{{$mail->first_name.' '.$mail->last_name}}</td>
-                                                <td class="mail-message">{{$mail->subject}}</td>
+                                                <td>{{$inbox->first_name.' '.$inbox->last_name}}</td>
+                                                <td class="mail-message">{{$inbox->subject}}</td>
                                                 <td class="hidden-xs"></td>
                                                 <td class="mail-label hidden-xs"></td>
-                                                <td class="text-right">{{$mail->created_at}}</td>
+                                                <td class="text-right">{{$inbox->created_at}}</td>
                                             </tr>
                                             @php($counter++)
-                                    @endif
-                                @endforeach
-                                @if($counter==0)
-                                    <tr style="background-color: lightgrey" class="text-center">
-                                        <td colspan="5">Your mailbox is empty</td>
-                                    </tr>
-                                @endif
-                            @else
-                                <tr style="background-color: lightgrey" class="text-center">
-                                    <td colspan="5">Your mailbox is empty</td>
-                                </tr>
-                            @endif
-                            </tbody>
-                        </table>
+                                            @endforeach
+                                            @if($counter==0)
+                                                <tr style="background-color: lightgrey" class="text-center">
+                                                    <td colspan="5">Your mailbox is empty</td>
+                                                </tr>
+                                            @endif
+                                            @else
+                                                <tr style="background-color: lightgrey" class="text-center">
+                                                    <td colspan="5">Your mailbox is empty</td>
+                                                </tr>
+                                            @endif
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
+
+                {{--SENT MAIL--}}
+                <div class="tab-pane fade" id="tab-2">
+                    <div class="ibox p-20" id="mailbox-container">
+                        <div class="mailbox-header">
+                            <div class="d-flex justify-content-between">
+                                <h5 class="d-none d-lg-block inbox-title"><i class="fa fa-envelope-o m-r-5"></i> Sent</h5>
+                            </div>
+                            <div class="d-flex justify-content-between inbox-toolbar p-10">
+                                <div class="d-flex">
+                                    <div id="inbox-actions">
+                                        <button class="btn btn-default btn-sm" data-toggle="tooltip" data-original-title="Move all to trash"><i class="fa fa-trash-o"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mailbox clf">
+                            <table class="table table-hover table-inbox" id="table-inbox">
+                                <tbody class="rowlinkx" data-link="row">
+                                @if(count($sents) > 0)
+                                    @php($counter = 0)
+                                    @foreach($sents as $idx => $sent)
+                                        <tr data-id="{{$idx+1}}" class="clickable-row" data-href="/mailbox/{{$sent->message_id}}" style="background-color: whitesmoke">
+                                            <td>
+                                                <i class="fa fa-envelope-open"></i>
+                                            </td>
+                                            <td>{{$sent->to}}</td>
+                                            <td class="mail-message">{{$sent->subject}}</td>
+                                            <td class="hidden-xs"></td>
+                                            <td class="mail-label hidden-xs"></td>
+                                            <td class="text-right">{{$sent->created_at}}</td>
+                                        </tr>
+                                        @php($counter++)
+                                    @endforeach
+                                    @if($counter==0)
+                                        <tr style="background-color: lightgrey" class="text-center">
+                                            <td colspan="5">Your sent mail is empty</td>
+                                        </tr>
+                                    @endif
+                                @else
+                                    <tr style="background-color: lightgrey" class="text-center">
+                                        <td colspan="5">Your sent mail is empty</td>
+                                    </tr>
+                                @endif
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {{--END SENT MAIL--}}
+
             </div>
         </div>
     </div>

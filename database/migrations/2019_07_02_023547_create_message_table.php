@@ -18,15 +18,10 @@ class CreateMessageTable extends Migration
             $table->string('subject', 50)->nullable(true);
             $table->string('body', 500);
             $table->string('from', 7)->nullable(true);
-            $table->string('to', 7)->nullable(true);
+            $table->string('to', 500)->nullable(true);
             $table->timestamps();
 
             $table->foreign('from')
-                ->references('user_id')
-                ->on('users')
-                ->onDelete('cascade');
-
-            $table->foreign('to')
                 ->references('user_id')
                 ->on('users')
                 ->onDelete('cascade');
