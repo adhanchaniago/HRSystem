@@ -61,6 +61,7 @@ Route::post('/applicant/reject/{id}', 'ApplicantController@RejectApplicant');
 Route::post('/applicant/proceed/{id}', 'ApplicantController@ProceedApplicant');
 
 Route::get('/technical-test/{id}', 'ApplicantController@TechnicalTestDetail');
+Route::get('/technical-test/{id}/print', 'ApplicantController@TechnicalTestPrint');
 Route::post('/technical-test/update/{id}', 'ApplicantController@TechnicalTestUpdate');
 Route::post('/technical-test/proceed/{id}', 'ApplicantController@TechnicalTestProceed');
 Route::post('/technical-test/reject/{id}', 'ApplicantController@TechnicalTestReject');

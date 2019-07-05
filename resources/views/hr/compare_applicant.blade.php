@@ -2,6 +2,18 @@
 @section('content')
 
     <div class="page-content fade-in-up">
+        <div class="m-b-30 text-center">
+            <h1>{{$job->job_name}}</h1>
+            <hr>
+            <h5>Job Criteria</h5>
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    Minimum Skill Score:&nbsp;{{$job->avg_score}}&nbsp;&nbsp;|&nbsp;&nbsp;Minimum Experience:&nbsp;{{$job->minimum_experience}}&nbsp;&nbsp;|&nbsp;&nbsp;Minimum Age:&nbsp;{{$job->minimum_age}}
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
         <div class="row">
             @foreach($members as $member)
                 <div class="col-md-6">

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AppProgress;
 use App\Applicant;
+use App\Document;
 use App\JobSkill;
 use App\TechnicalTest;
 use App\UserEducation;
@@ -189,10 +190,14 @@ class JobController extends Controller
         $exp = UserExperience::all()->where('user_id', '=', $user_id)->count();
         $edu = UserEducation::all()->where('user_id', '=', $user_id)->count();
         $skl = UserSkill::all()->where('user_id', '=', $user_id)->count();
+        $cv = DB::table('document')->where([
+            ['user_id', '=', $user_id],
+            ['document_type_id', '=', 'DTY0001']
+        ])->count();
 
         $validate_profile = false;
 
-        if ($exp > 0 && $edu > 0 && $skl > 0) {
+        if ($exp > 0 && $edu > 0 && $skl > 0 && $cv > 0) {
             $validate_profile = true;
         } else {
             $validate_profile = false;
@@ -307,12 +312,12 @@ class JobController extends Controller
         $app->progress_name = $request->progress_name;
         $app->sequence = $request->sequence;
 
-        if($request->hasFile('attachment')){
-            $doc = $request->file('attachment');
-            $namafile = $app->application_progress_id.'_'.str_replace(' ','_',$request->progress_name).'.'.$doc->getClientOriginalExtension(); /*Membuat nama foto berdasarkan nama pengguna*/
-            $doc->move(public_path('/documents/test_attachment/'), $namafile); /*Memindahkan foto ke direktori assets/images/users*/
-            $app->attachment_url = '/documents/test_attachment/'.$namafile;
-        }
+//        if($request->hasFile('attachment')){
+//            $doc = $request->file('attachment');
+//            $namafile = $app->application_progress_id.'_'.str_replace(' ','_',$request->progress_name).'.'.$doc->getClientOriginalExtension(); /*Membuat nama foto berdasarkan nama pengguna*/
+//            $doc->move(public_path('/documents/test_attachment/'), $namafile); /*Memindahkan foto ke direktori assets/images/users*/
+//            $app->attachment_url = '/documents/test_attachment/'.$namafile;
+//        }
 
         $app->save();
 
@@ -324,7 +329,7 @@ class JobController extends Controller
     public function DeleteProgress($id){
         $app = AppProgress::find($id);
         $job_id = $app->job_id;
-        unlink(substr($app->attachment_url, 1));
+        //unlink(substr($app->attachment_url, 1));
         $app->delete();
         return redirect('/job/details/'.$job_id)->with([
             'success' => 'Delete Progress Success!'

@@ -330,7 +330,7 @@
                                         {{csrf_field()}}
 
                                         <div class="form-group">
-                                            <label for=""><b>Education History</b></label>
+                                            <label for=""><b>Education Background</b></label>
                                             <div class="education_wrapper">
                                                 @if(count($educations) > 0)
                                                     @php($ed_idx = 0)
@@ -400,7 +400,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for=""><b>Experience History</b></label>
+                                            <label for=""><b>Work Experience</b></label>
                                             <div class="experience_wrapper">
                                                 @if(count($experiences) > 0)
                                                     @php($exp_idx = 0)

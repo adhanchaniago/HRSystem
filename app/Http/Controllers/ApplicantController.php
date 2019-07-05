@@ -172,7 +172,7 @@ class applicantController extends Controller
         $applicant->job_id = $request->job_id;
         $applicant->user_id = Auth::user()->user_id;
         $applicant->applied_date = date('Y-m-d');
-        $applicant->current_step = "1";
+        $applicant->current_step = "apply";
         $applicant->status = "waiting";
 
         if($request->has('recruiter_id')){
@@ -407,6 +407,7 @@ class applicantController extends Controller
     public function CompareApplicant(Request $request, $id){
 
         $jobSkills = JobSkill::all()->where('job_id', '=', $id);
+
         $applicant = DB::table('applicant')
             ->join('users', 'users.user_id', '=', 'applicant.user_id')
             ->join('user_skill', 'applicant.user_id', '=', 'user_skill.user_id')
@@ -515,8 +516,10 @@ class applicantController extends Controller
             $na->gain = $gain;
         }
 
+        $job->avg_score = $jsAvg;
         return view('hr.compare_applicant')->with([
             'members' => $new_arr,
+            'job' => $job
         ]);
     }
 
@@ -533,4 +536,21 @@ class applicantController extends Controller
         return $groups;
     }
 
+    public function TechnicalTestPrint($id){
+        $techs = DB::table('technical_test')
+            ->join('applicant', 'applicant.applicant_id', '=', 'technical_test.applicant_id')
+            ->join('users', 'applicant.user_id', '=', 'users.user_id')
+            ->join('job', 'applicant.job_id', '=', 'job.job_id')
+            ->join('department', 'job.department_id', '=', 'department.department_id')
+            ->select('technical_test.*', 'applicant.applied_date', 'applicant.status', 'users.*','job.job_id', 'job.job_name', 'department.department_name')
+            ->where('technical_test.technical_test_id', '=', $id)
+            ->first();
+
+        $approg = DB::table('application_progress')->where('job_id', '=', $techs->job_id)->orderBy('sequence', 'asc')->get();
+
+        return view('hr.print_test_report')->with([
+            "progress" => $approg,
+            "tech" => $techs
+        ]);
+    }
 }

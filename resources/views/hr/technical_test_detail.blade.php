@@ -170,9 +170,6 @@
                                         </div>
                                     @endforeach
                                 </div>
-                                <div class="text-right m-20">
-                                    <h5><b>Average Score: <span id="avgScore"></span></b></h5>
-                                </div>
                                 <div class="text-right">
                                     <button class="btn btn-success">Submit Score</button>
                                 </div>
@@ -216,6 +213,9 @@
                                         </span>
                                     @endif
                                 </h3>
+                            </div>
+                            <div class="text-right">
+                                <a href="{{url('/technical-test/'.$technical->technical_test_id.'/print')}}" target="_blank" class="btn btn-info">Print Test Report</a>
                             </div>
                         @else
                             <div class="text-center">

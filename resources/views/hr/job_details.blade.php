@@ -118,7 +118,7 @@
                                     {{$prog->progress_name}}
                                 </div>
                                 <div class="col-md-4">
-                                    <a href="{{$prog->attachment_url}}" class="btn btn-info btn-xs" download="{{$prog->progress_name}}"><i class="fa fa-download"></i></a>
+                                    <a href="" class="btn btn-info btn-xs" download="{{$prog->progress_name}}"><i class="fa fa-download"></i></a>
                                     <a href="/job/delete-progress/{{$prog->application_progress_id}}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></a>
                                 </div>
                             </div>
