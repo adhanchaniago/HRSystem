@@ -247,7 +247,7 @@
                                 <tr>
                                     <td>{{$doc->document_name}}</td>
                                     <td>{{$doc->document_type_name}}</td>
-                                    <td><small>{{TimeSince( strtotime('now') - strtotime($doc->created_at))}} ago</small></td>
+                                    <td><small>{{TimeSince( strtotime(now('Asia/Jakarta')) - strtotime($doc->created_at))}} ago</small></td>
                                     <td class="text-center"><a href="{{$doc->document_url}}" target="_blank"><i class="fa fa-download"></i></a></td>
                                 </tr>
                             @endforeach

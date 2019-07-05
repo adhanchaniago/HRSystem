@@ -23,24 +23,11 @@ use Illuminate\Support\Facades\Validator;
 
 class applicantController extends Controller
 {
-    //
-//    public function ShowAllapplicant(){
-//        $applicants = DB::table('applicant')
-//            ->join('users', 'applicant.user_id', '=', 'users.user_id')
-//            ->join('job', 'applicant.job_id', '=', 'job.job_id')
-//            ->join('department', 'job.department_id', '=', 'department.department_id')
-//            ->select('applicant.applied_date', 'applicant.status', 'users.user_id', 'users.first_name', 'users.last_name', 'users.photo_url','job.job_name', 'department.department_name')
-//            ->get();
-//
-//        return view('hr.applicant_list')->with([
-//            "applicants" => $applicants
-//        ]);
-//    }
 
     public function ProceedApplicant($id){
         $applicant = Applicant::find($id);
-        $applicant->status = 'apply_pass';
         $applicant->current_step = 'technical_test';
+        $applicant->status = 'waiting';
 
         $applicant->save();
 
@@ -58,7 +45,7 @@ class applicantController extends Controller
     public function RejectApplicant($id){
 
         $applicant = Applicant::find($id);
-        $applicant->status = 'apply_fail';
+        $applicant->status = 'rejected';
         $applicant->save();
 
         return redirect('/job/'.$applicant->job_id.'/applicants')->with([
@@ -105,6 +92,7 @@ class applicantController extends Controller
             ->select('applicant.applicant_id', 'applicant.applied_date', 'applicant.status', 'users.*','job.job_name', 'department.department_name')
             ->where('applicant.job_id', '=', $id)
             ->where('applicant.status', '=', 'waiting')
+            ->where('applicant.current_step', '=', 'apply')
             ->get();
 
         $technicalTest = DB::table('technical_test')
@@ -146,22 +134,6 @@ class applicantController extends Controller
             "technical_test" => $technicalTest,
             "interviews" => $interviews,
             "finals" => $finals,
-        ]);
-    }
-
-    public function InterviewCompleted(Request $request, $id){
-        $interview = Interview::find($id);
-        $interview->status = 'completed';
-        $interview->interview_score = $request->interview_score;
-        $interview->save();
-
-        $applicant = Applicant::find($interview->applicant_id);
-        $applicant->current_step = 'final_result';
-        $applicant->status = 'wait_final_result';
-        $applicant->save();
-
-        return redirect('/job/'.$applicant->job_id.'/applicants')->with([
-            "success" => "Success set interview as completed."
         ]);
     }
 
@@ -207,7 +179,7 @@ class applicantController extends Controller
         $document = DB::table('document')
             ->join('document_type', 'document.document_type_id', '=', 'document_type.document_type_id')
             ->select('document.*', 'document_type.document_type_name')
-            ->where('document.user_id', '=', $techs->user_id)
+            ->where('document.regarding_id', '=', $techs->applicant_id)
             ->where('document.document_type_id', '=', 'DTY0003')
             ->get();
 
@@ -238,6 +210,7 @@ class applicantController extends Controller
         $average = $average/count($score);
 
         $tech->average_score = $average;
+        $tech->status = "tested";
 
         $tech->save();
 
@@ -258,7 +231,7 @@ class applicantController extends Controller
             ->first();
 
         $app = Applicant::find($job->applicant_id);
-        $app->status = "technical_test_fail";
+        $app->status = "rejected";
         $app->save();
 
         return redirect('/job/'.$job->job_id.'/applicants')->with([
@@ -280,7 +253,7 @@ class applicantController extends Controller
 
         $app = Applicant::find($job->applicant_id);
         $app->current_step = 'interview';
-        $app->status = "technical_test_pass";
+        $app->status = "waiting";
         $app->save();
 
         $interview = new Interview();
@@ -364,6 +337,52 @@ class applicantController extends Controller
         ]);
     }
 
+
+    public function InterviewCompleted(Request $request, $id){
+        $interview = Interview::find($id);
+        $interview->status = 'completed';
+        $interview->interview_score = $request->interview_score;
+        $interview->save();
+
+        $applicant = Applicant::find($interview->applicant_id);
+        $applicant->current_step = 'final';
+        $applicant->status = 'waiting';
+        $applicant->save();
+
+        return redirect('/job/'.$applicant->job_id.'/applicants')->with([
+            "success" => "Success set interview as completed."
+        ]);
+    }
+
+    public function InterviewProceed($id){
+
+        $interview = Interview::find($id);
+        $interview->status = 'pass';
+        $interview->save();
+
+        $applicant = Applicant::find($interview->applicant_id);
+        $applicant->status = 'accepted';
+        $applicant->save();
+
+        return redirect('/job/'.$applicant->job_id.'/applicants')->with([
+            "success" => "Success accept applicant as new employee."
+        ]);
+    }
+
+    public function InterviewReject($id){
+        $interview = Interview::find($id);
+        $interview->status = 'fail';
+        $interview->save();
+
+        $applicant = Applicant::find($interview->applicant_id);
+        $applicant->status = 'rejected';
+        $applicant->save();
+
+        return redirect('/job/'.$applicant->job_id.'/applicants')->with([
+            "success" => "Success accept applicant as new employee."
+        ]);
+    }
+
     public function InterviewSession($code)
     {
         $interview = Interview::all()
@@ -404,6 +423,7 @@ class applicantController extends Controller
         return $hmac;
     }
 
+
     public function CompareApplicant(Request $request, $id){
 
         $jobSkills = JobSkill::all()->where('job_id', '=', $id);
@@ -420,6 +440,7 @@ class applicantController extends Controller
         $totalSkill = $jobSkills->count();
         $tempApplicant = array();
         $minJobScore = 0;
+        $jrate = 0;
         $minAge = $job->minimum_age;
         $minExp = $job->minimum_experience;
 
@@ -435,9 +456,6 @@ class applicantController extends Controller
                     $jobRate += $jbs->rate;
                 }
                 $score -= $jbs->rate;
-                $jrate = $jbs->rate * ($jbs->rate/2);
-
-                $minJobScore = $minJobScore + $jrate;
             }
 
             if ($jobRate > 0) {
@@ -453,6 +471,12 @@ class applicantController extends Controller
             array_push($tempApplicant,$app);
         }
 
+        foreach ($jobSkills as $jbs) {
+            $jrate = $jbs->rate * $jbs->rate;
+            $minJobScore = $minJobScore + $jrate;
+        }
+
+
         $new_arr = [];
         $new_arr = $this->SumScoreByApplicantId($tempApplicant);
 
@@ -461,7 +485,7 @@ class applicantController extends Controller
             return  $b->score - $a->score;
         });
 
-        $jsAvg = $minJobScore/$totalSkill;
+        $jsAvg = $minJobScore;//count($applicant);
         foreach ($new_arr as $idx => $na){
             $gain = 0;
             $experience = UserExperience::all()->where('user_id', '=', $na->user_id);
@@ -517,6 +541,7 @@ class applicantController extends Controller
         }
 
         $job->avg_score = $jsAvg;
+
         return view('hr.compare_applicant')->with([
             'members' => $new_arr,
             'job' => $job
@@ -536,21 +561,74 @@ class applicantController extends Controller
         return $groups;
     }
 
-    public function TechnicalTestPrint($id){
-        $techs = DB::table('technical_test')
-            ->join('applicant', 'applicant.applicant_id', '=', 'technical_test.applicant_id')
-            ->join('users', 'applicant.user_id', '=', 'users.user_id')
-            ->join('job', 'applicant.job_id', '=', 'job.job_id')
-            ->join('department', 'job.department_id', '=', 'department.department_id')
-            ->select('technical_test.*', 'applicant.applied_date', 'applicant.status', 'users.*','job.job_id', 'job.job_name', 'department.department_name')
-            ->where('technical_test.technical_test_id', '=', $id)
-            ->first();
+    public function ApplicantReportPrint($reportType, $id){
+
+
+        if($reportType == "technical-test"){
+            $techs = DB::table('technical_test')
+                ->join('applicant', 'applicant.applicant_id', '=', 'technical_test.applicant_id')
+                ->join('users', 'applicant.user_id', '=', 'users.user_id')
+                ->join('job', 'applicant.job_id', '=', 'job.job_id')
+                ->join('department', 'job.department_id', '=', 'department.department_id')
+                ->select('technical_test.*', 'applicant.applied_date', 'applicant.status', 'users.*','job.job_id', 'job.job_name', 'department.department_name')
+                ->where('technical_test.technical_test_id', '=', $id)
+                ->first();
+
+        }else{
+            $techs = DB::table('interview')
+                ->join('applicant', 'applicant.applicant_id', '=', 'interview.applicant_id')
+                ->join('users', 'applicant.user_id', '=', 'users.user_id')
+                ->join('technical_test', 'applicant.applicant_id', '=', 'technical_test.applicant_id')
+                ->join('job', 'applicant.job_id', '=', 'job.job_id')
+                ->join('department', 'job.department_id', '=', 'department.department_id')
+                ->select('interview.*', 'technical_test.score_1', 'technical_test.score_2', 'technical_test.score_3', 'technical_test.score_4', 'technical_test.average_score', 'applicant.applied_date', 'applicant.status', 'users.*', 'job.job_id', 'job.job_name', 'department.department_name')
+                ->where('interview.interview_id', '=', $id)
+                ->first();
+        }
 
         $approg = DB::table('application_progress')->where('job_id', '=', $techs->job_id)->orderBy('sequence', 'asc')->get();
 
         return view('hr.print_test_report')->with([
             "progress" => $approg,
-            "tech" => $techs
+            "tech" => $techs,
+            "reportType" => $reportType
+        ]);
+    }
+
+    public function UploadTestAnswers(Request $request, $id){
+
+        if($request->hasFile('answerFile')) {
+
+            $document = Document::all()->where('document_name', '=', $request->document_name)->first();
+            if($document){
+                if($document->document_name = $request->document_name){
+                    unlink(substr($document->document_url, 1));
+                    $document->delete();
+                }
+            }
+
+            $doc = new Document();
+            $doc->document_id = GenerateId('document', 'DOC');
+            $doc->document_name = $request->document_name;
+            $doc->regarding_id = $id;
+            $doc->document_type_id = "DTY0003";
+
+            $file = $request->file('answerFile');
+            $namafile = $request->document_name.'.'.$file->getClientOriginalExtension(); /*Membuat nama foto berdasarkan nama pengguna*/
+            $file->move(public_path('/documents/test_answers/'.$id.'/'), $namafile); /*Memindahkan foto ke direktori assets/images/users*/
+
+            $doc->document_url = '/documents/test_answers/'.$id.'/'.$namafile;
+            $doc->created_at = now('Asia/Jakarta');
+            $doc->updated_at = now('Asia/Jakarta');
+            $doc->save();
+
+            return redirect()->back()->with([
+                "success" => "Success upload answers!"
+            ]);
+        }
+
+        return redirect()->back()->with([
+            "error" => "No file detected."
         ]);
     }
 }

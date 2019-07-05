@@ -272,7 +272,7 @@ class UserController extends Controller
 
     public function ShowProfile(){
         $id = Auth::user()->user_id;
-        $documents = Document::all()->where('user_id', '=', $id);
+        $documents = Document::all()->where('regarding_id', '=', $id);
         $experience = UserExperience::all()->where('user_id', '=', $id);
         $education = UserEducation::all()->where('user_id', '=', $id);
         $skill = UserSkill::all()->where('user_id', '=', $id);

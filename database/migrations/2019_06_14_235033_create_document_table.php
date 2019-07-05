@@ -22,26 +22,6 @@ class CreateDocumentTable extends Migration
 
             $table->timestamps();
 
-            $table->foreign('regarding_id')
-                ->references('user_id')
-                ->on('users')
-                ->onDelete('cascade');
-
-            $table->foreign('regarding_id')
-                ->references('applicant_id')
-                ->on('applicant')
-                ->onDelete('cascade');
-
-            $table->foreign('regarding_id')
-                ->references('application_progress_id')
-                ->on('application_progress')
-                ->onDelete('cascade');
-
-            $table->foreign('regarding_id')
-                ->references('message_id')
-                ->on('message')
-                ->onDelete('cascade');
-
             $table->foreign('document_type_id')
                 ->references('document_type_id')
                 ->on('document_type')

@@ -33,7 +33,11 @@ Route::post('/profile/update-career-info', 'UserController@UpdateCareerInfo');
 
 Route::get('/job', 'JobController@ShowAllJob');
 Route::post('/job/add-application-progress/{id}', 'JobController@AddApplicationProgress');
+
+Route::post('/job/upload-progress-document/{id}', 'JobController@UploadProgressDocument');
+
 Route::get('/job/applied-jobs', 'JobController@ShowAppliedJobs');
+Route::get('/job/applied-jobs/{id}', 'JobController@AppliedJobDetails');
 Route::post('/job/apply-job', 'ApplicantController@ApplyJob');
 
 Route::post('/job/add-new-job', 'JobController@AddNewJob');
@@ -61,18 +65,20 @@ Route::post('/applicant/reject/{id}', 'ApplicantController@RejectApplicant');
 Route::post('/applicant/proceed/{id}', 'ApplicantController@ProceedApplicant');
 
 Route::get('/technical-test/{id}', 'ApplicantController@TechnicalTestDetail');
-Route::get('/technical-test/{id}/print', 'ApplicantController@TechnicalTestPrint');
 Route::post('/technical-test/update/{id}', 'ApplicantController@TechnicalTestUpdate');
 Route::post('/technical-test/proceed/{id}', 'ApplicantController@TechnicalTestProceed');
 Route::post('/technical-test/reject/{id}', 'ApplicantController@TechnicalTestReject');
+Route::post('/technical-test/upload-answer/{id}', 'ApplicantController@UploadTestAnswers');
+
+Route::get('/{reportType}/{id}/print', 'ApplicantController@ApplicantReportPrint');
 
 Route::get('/interview/schedule', 'ApplicantController@ShowAllInterview');
 
 Route::get('/interview/{id}', 'ApplicantController@InterviewDetail');
-Route::post('/interview/completed/{id}', 'ApplicantController@InterviewCompleted');
-Route::get('/interview/proceed/{id}', 'ApplicantController@InterviewProceed');
-Route::get('/interview/reject/{id}', 'ApplicantController@InterviewReject');
 Route::get('/interview/session/{code}', 'ApplicantController@InterviewSession');
+Route::post('/interview/completed/{id}', 'ApplicantController@InterviewCompleted');
+Route::post('/interview/proceed/{id}', 'ApplicantController@InterviewProceed');
+Route::post('/interview/reject/{id}', 'ApplicantController@InterviewReject');
 
 Route::get('/interview/signer', 'ApplicantController@InterviewSigner');
 

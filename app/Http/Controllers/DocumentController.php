@@ -12,10 +12,9 @@ use Illuminate\Support\Facades\DB;
 class DocumentController extends Controller
 {
     //
-
     public function ShowApplicantDocument(){
         $docs = DB::table('document')
-            ->join('users', 'document.user_id', '=', 'users.user_id')
+            ->join('users', 'document.regarding_id', '=', 'users.user_id')
             ->select('users.first_name', 'users.last_name', 'users.role_id', 'users.role_id',
                 'document.document_name', 'document.document_url', 'document.document_type_id', 'document.created_at')
             ->where('users.role_id', '=', 'ROLE002')
@@ -29,7 +28,7 @@ class DocumentController extends Controller
 
     public function ShowRecruiterDocument(){
         $docs = DB::table('document')
-            ->join('users', 'document.user_id', '=', 'users.user_id')
+            ->join('users', 'document.regarding_id', '=', 'users.user_id')
             ->select('users.first_name', 'users.last_name', 'users.role_id', 'users.role_id',
                 'document.document_name', 'document.document_url', 'document.document_type_id', 'document.created_at')
             ->where('users.role_id', '=', 'ROLE001')
@@ -44,7 +43,7 @@ class DocumentController extends Controller
     public function UploadDocument(Request $request){
         $doc = new Document();
         $doc->document_id = GenerateId('document', 'DOC');
-        $doc->user_id = Auth::user()->user_id;
+        $doc->regarding_id = Auth::user()->user_id;
         $doc->document_name = $request->docName;
         $doc->document_type_id = $request->docType;
 

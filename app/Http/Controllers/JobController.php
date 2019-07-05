@@ -10,6 +10,7 @@ use App\TechnicalTest;
 use App\UserEducation;
 use App\UserExperience;
 use App\UserSkill;
+use function foo\func;
 use Illuminate\Http\Request;
 use App\User;
 use App\Job;
@@ -134,7 +135,9 @@ class JobController extends Controller
 
         $progress = DB::table('application_progress')
             //->select('*')
+            ->leftJoin('document', 'application_progress.application_progress_id', 'document.regarding_id')
             ->where('job_id', '=', $id)
+            ->select('application_progress.*', 'document.document_url')
             ->orderBy('application_progress_id', 'asc')
             ->get();
 
@@ -142,7 +145,7 @@ class JobController extends Controller
             [
                 'job' => $job,
                 'skills' => $skills,
-                'progress' => $progress
+                'progress' => $progress,
             ]
         );
     }
@@ -191,7 +194,7 @@ class JobController extends Controller
         $edu = UserEducation::all()->where('user_id', '=', $user_id)->count();
         $skl = UserSkill::all()->where('user_id', '=', $user_id)->count();
         $cv = DB::table('document')->where([
-            ['user_id', '=', $user_id],
+            ['regarding_id', '=', $user_id],
             ['document_type_id', '=', 'DTY0001']
         ])->count();
 
@@ -219,7 +222,6 @@ class JobController extends Controller
 
         $tempApplicant = array();
 
-
         $totalScore = 0;
         foreach ($job as $jb) {
             $jobSkills = JobSkill::all()->where('job_id', '=', $jb->job_id);
@@ -228,7 +230,7 @@ class JobController extends Controller
                 ->join('user_skill', 'applicant.user_id', '=', 'user_skill.user_id')
                 ->select('users.*', 'user_skill.skill_name', 'user_skill.rate', 'applicant.applicant_id', 'applicant.job_id', 'applicant.recruiter_id', 'applicant.applied_date', 'applicant.current_step')
                 ->where('applicant.job_id', '=', $jb->job_id)
-                ->where('applicant.status', 'not like', '%fail%')
+                ->whereNotIn('applicant.status', ['accepted', 'rejected'] )
                 //->limit(5)
                 ->get();
 
@@ -311,26 +313,64 @@ class JobController extends Controller
         $app->job_id = $id;
         $app->progress_name = $request->progress_name;
         $app->sequence = $request->sequence;
-
-//        if($request->hasFile('attachment')){
-//            $doc = $request->file('attachment');
-//            $namafile = $app->application_progress_id.'_'.str_replace(' ','_',$request->progress_name).'.'.$doc->getClientOriginalExtension(); /*Membuat nama foto berdasarkan nama pengguna*/
-//            $doc->move(public_path('/documents/test_attachment/'), $namafile); /*Memindahkan foto ke direktori assets/images/users*/
-//            $app->attachment_url = '/documents/test_attachment/'.$namafile;
-//        }
-
         $app->save();
+
+        if($request->hasFile('attachment')){
+
+            $doc = new Document();
+            $doc->document_id = GenerateId('document', 'DOC');
+            $doc->regarding_id = $app->application_progress_id;
+
+            $attach = $request->file('attachment');
+            $namafile = $app->application_progress_id.'_'.str_replace(' ','_',$request->progress_name).'.'.$attach->getClientOriginalExtension(); /*Membuat nama foto berdasarkan nama pengguna*/
+            $attach->move(public_path('/documents/test_attachment/'), $namafile); /*Memindahkan foto ke direktori assets/images/users*/
+
+            $doc->document_name = $namafile;
+            $doc->document_url = '/documents/test_attachment/'.$namafile;
+            $doc->document_type_id = "DTY0004";
+            $doc->save();
+        }
 
         return redirect('/job/details/'.$id)->with([
             'success' => 'Add Progress Success!'
         ]);
     }
 
+    public function UploadProgressDocument(Request $request, $id){
+
+        $prog = AppProgress::find($id);
+
+        if($request->hasFile('attachment')){
+
+            $doc = new Document();
+            $doc->document_id = GenerateId('document', 'DOC');
+            $doc->regarding_id = $id;
+
+            $attach = $request->file('attachment');
+            $namafile = $id.'_'.str_replace(' ','_',$prog->progress_name).'.'.$attach->getClientOriginalExtension(); /*Membuat nama foto berdasarkan nama pengguna*/
+            $attach->move(public_path('/documents/test_attachment/'), $namafile); /*Memindahkan foto ke direktori assets/images/users*/
+
+            $doc->document_name = $namafile;
+            $doc->document_url = '/documents/test_attachment/'.$namafile;
+            $doc->document_type_id = "DTY0004";
+            $doc->save();
+        }
+
+        return redirect('/job/details/'.$prog->job_id)->with([
+            'success' => 'Add Progress Success!'
+        ]);
+    }
+
     public function DeleteProgress($id){
+
+        $doc = Document::all()->where('regarding_id', '=', $id)->first();
+        unlink(substr($doc->document_url, 1));
+        $doc->delete();
+
         $app = AppProgress::find($id);
         $job_id = $app->job_id;
-        //unlink(substr($app->attachment_url, 1));
         $app->delete();
+
         return redirect('/job/details/'.$job_id)->with([
             'success' => 'Delete Progress Success!'
         ]);
@@ -356,13 +396,46 @@ class JobController extends Controller
             ->join('users', 'applicant.user_id', '=', 'users.user_id')
             ->join('job', 'applicant.job_id', '=', 'job.job_id')
             ->join('department', 'job.department_id', '=', 'department.department_id')
-            ->select('applicant.applied_date', 'applicant.status', 'applicant.current_step', 'users.first_name', 'users.last_name', 'job.job_name', 'department.department_name')
+            ->select('applicant.*', 'users.first_name', 'users.last_name', 'job.job_name', 'department.department_name')
             ->where('applicant.user_id', '=', Auth::user()->user_id)
+            ->orderBy('applicant.applied_date', 'asc')
             ->get();
 
-        return view('applicant.applied-jobs')->with([
+        return view('applicant.applied_jobs')->with([
             "applicant" => $applicant
         ]);
+    }
+
+    public function AppliedJobDetails($id){
+
+        $applicants = DB::table('applicant')
+            ->join('users', 'applicant.user_id', '=', 'users.user_id')
+            ->join('job', 'applicant.job_id', '=', 'job.job_id')
+            ->leftJoin('technical_test', 'applicant.applicant_id', '=', 'technical_test.applicant_id')
+            ->leftJoin('interview', 'applicant.applicant_id', '=', 'interview.applicant_id')
+            ->join('department', 'job.department_id', '=', 'department.department_id')
+            ->select('applicant.applicant_id', 'applicant.applied_date', 'applicant.current_step', 'applicant.status', 'users.*',
+                'job.job_name', 'job.job_id', 'department.department_name', 'technical_test.technical_test_id', 'interview.interview_id')
+            ->where('applicant.applicant_id', '=', $id)
+            ->first();
+
+        $testAns = Document::all()->where('regarding_id', '=', $id);
+
+        $progress = DB::table('application_progress')
+            ->where([
+                ['job_id', '=', $applicants->job_id]
+            ])
+            ->leftJoin('document', 'application_progress.application_progress_id', '=', 'document.regarding_id')
+            ->select('application_progress.progress_name', 'application_progress.application_progress_id', 'document.*')
+            ->orderBy('sequence', 'asc')
+            ->get();
+
+        return view('applicant.applied_job_details')
+            ->with([
+                "applicants" => $applicants,
+                "testAnswer" => $testAns,
+                "progress" => $progress
+            ]);
     }
 
     public function ShowAllDepartment(){

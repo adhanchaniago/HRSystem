@@ -65,7 +65,7 @@
     <div style="padding:1cm;">
         <div class="text-center">
             <img src="/assets/img/tfinder.png" alt="logo" width="140px" class="center">
-            <h4>Technical Test Report</h4>
+            <h4>Applicant Report</h4>
         </div>
         <hr style="border: solid 1px black;">
         <div style="padding:15px">
@@ -90,7 +90,7 @@
                     </table>
                 </div>
                 <div class="col-md-6 text-right">
-                    <small>Printed by <b>{{Auth::user()->first_name.' '.Auth::user()->last_name}}</b></small>
+                    <small>Printed by <b>{{Auth::user()->first_name.' '.Auth::user()->last_name}}</b><br>{{date('l, d F Y', strtotime(now('Asia/Jakarta')))}}</small>
                 </div>
             </div>
             <div style="margin-top: 20px">
@@ -103,9 +103,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($progress as $prog)
+                        @foreach($progress as $idx=>$prog)
                             <tr>
-                                <td>{{$prog->sequence}}</td>
+                                <td>{{$idx+1}}</td>
                                 <td>{{$prog->progress_name}}</td>
                                 @php($id = 'score_'.$prog->sequence)
                                 <td class="text-center">{{ $tech->{$id} }}</td>
@@ -113,31 +113,78 @@
                         @endforeach
                     </tbody>
                     <tfoot>
-                        <tr>
-                            <th></th>
-                            <th class="text-right">
-                                Average Score
-                            </th>
-                            <th class="text-center">{{$tech->average_score}}</th>
-                        </tr>
+                        @if($reportType == "technical-test")
+                            <tr>
+                                <th></th>
+                                <th class="text-right">Average Technical Test Score</th>
+                                <th class="text-center">{{$tech->average_score}}</th>
+                            </tr>
+                            @if($tech->status == "rejected")
+                                <tr>
+                                    <td></td>
+                                    <th class="text-right">Status</th>
+                                    <th class="text-danger text-center">{{strtoupper($tech->status)}}</th>
+                                </tr>
+                            @endif
+                        @elseif($reportType == "interview")
+                            <tr>
+                                <th></th>
+                                <th class="text-right">Average Technical Test Score</th>
+                                <th class="text-center">{{$tech->average_score}}</th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <th class="text-right">Interview Score</th>
+                                <th class="text-center">{{$tech->interview_score}}</th>
+                            </tr>
+                            @if($tech->status == "rejected")
+                                <tr>
+                                    <td></td>
+                                    <th class="text-right">Status</th>
+                                    <th class="text-danger text-center">{{strtoupper($tech->status)}}</th>
+                                </tr>
+                            @endif
+                        @elseif($reportType == "final")
+                            <tr>
+                                <th></th>
+                                <th class="text-right">Average Technical Test Score</th>
+                                <th class="text-center">{{$tech->average_score}}</th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <th class="text-right">Interview Score</th>
+                                <th class="text-center">{{$tech->interview_score}}</th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <th class="text-right">Status</th>
+                                @if($tech->status == "accepted")
+                                    <th class="text-success text-center">{{strtoupper($tech->status)}}</th>
+                                @else
+                                    <th class="text-danger text-center">{{strtoupper($tech->status)}}</th>
+                                @endif
+                            </tr>
+                        @endif
                     </tfoot>
                 </table>
             </div>
-            <div style="margin-top: 50px">
-                <div class="row">
-                    <div class="col-md-8"></div>
-                    <div class="col-md-4">
-                        Jakarta, {{date('d F Y',strtotime(now('Asia/Jakarta')))}}
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        (........................................)
+            @if(Auth::user()->role_id == "ROLE001")
+                <div style="margin-top: 50px">
+                    <div class="row">
+                        <div class="col-md-8"></div>
+                        <div class="col-md-4">
+                            Jakarta, {{date('d F Y',strtotime(now('Asia/Jakarta')))}}
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            (........................................)
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 </page>

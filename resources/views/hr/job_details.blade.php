@@ -118,7 +118,45 @@
                                     {{$prog->progress_name}}
                                 </div>
                                 <div class="col-md-4">
-                                    <a href="" class="btn btn-info btn-xs" download="{{$prog->progress_name}}"><i class="fa fa-download"></i></a>
+                                    <div class="modal fade" id="appProgressAttchModal{{$prog->application_progress_id}}">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+
+                                                <!-- Modal Header -->
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title"><i class="fa fa-plus"></i> Upload Attachment for {{$prog->progress_name}}</h4>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                </div>
+
+                                                <form action="{{url("/job/upload-progress-document/".$prog->application_progress_id)}}" method="post" enctype="multipart/form-data">
+                                                {{csrf_field()}}
+                                                <!-- Modal body -->
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label for="">Attachment</label>
+                                                            <input type="file" name="attachment" placeholder="Attachment" class="form-control" required>
+                                                        </div>
+                                                        <div class="m-t-15">
+                                                            <i><span style="color:red">*</span>If any, the existing file will be replaced with the new one.</i>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Modal footer -->
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-success">Submit</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @if($prog->document_url != null || $prog->document_url != "")
+                                        <a href="{{$prog->document_url}}" class="btn btn-success btn-xs" download="{{$prog->progress_name}}"><i class="fa fa-download"></i></a>
+                                        <a href="#" class="btn btn-info btn-xs" data-toggle="modal" data-target="#appProgressAttchModal{{$prog->application_progress_id}}"><i class="fa fa-upload"></i></a>
+                                    @else
+                                        <a href="#" class="btn btn-info btn-xs" data-toggle="modal" data-target="#appProgressAttchModal{{$prog->application_progress_id}}"><i class="fa fa-upload"></i></a>
+                                        <a href="#" class="btn btn-default btn-xs disabled"><i class="fa fa-download"></i></a>
+                                    @endif
                                     <a href="/job/delete-progress/{{$prog->application_progress_id}}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></a>
                                 </div>
                             </div>
