@@ -315,7 +315,7 @@ class applicantController extends Controller
                 ->join('users', 'users.user_id', '=', 'applicant.user_id')
                 ->select('users.user_id', 'users.first_name', 'users.last_name', 'users.first_name', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
                 ->where('interviewer_id', '=', Auth::user()->user_id)
-                ->where('interview.status', '!=', 'completed')
+                ->where('interview.status', '=', 'scheduled')
                 ->orderBy('interview.interview_datetime', 'asc')
                 ->get();
         }else{
@@ -327,7 +327,7 @@ class applicantController extends Controller
                 ->join('users', 'users.user_id', '=', 'interview.interviewer_id')
                 ->select('users.user_id', 'users.first_name', 'users.last_name', 'users.first_name', 'applicant.user_id', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
                 ->where('applicant.user_id', '=', Auth::user()->user_id)
-                ->where('interview.status', '!=', 'completed')
+                ->where('interview.status', '=', 'scheduled')
                 ->orderBy('interview.interview_datetime', 'asc')
                 ->get();
         }
@@ -426,15 +426,21 @@ class applicantController extends Controller
 
     public function CompareApplicant(Request $request, $id){
 
+        $interviewer = User::all()->where('role_id', '=', 'ROLE001');
+        $intvMethod = InterviewType::all();
+
         $jobSkills = JobSkill::all()->where('job_id', '=', $id);
 
         $applicant = DB::table('applicant')
             ->join('users', 'users.user_id', '=', 'applicant.user_id')
             ->join('user_skill', 'applicant.user_id', '=', 'user_skill.user_id')
-            ->whereIn('applicant_id', $request->compare)
+            ->leftJoin('technical_test', 'applicant.applicant_id', '=', 'technical_test.applicant_id')
+            ->leftJoin('interview', 'applicant.applicant_id', '=', 'interview.applicant_id')
+            ->whereIn('applicant.applicant_id', $request->compare)
             ->where('job_id', '=', $id)
-            ->select('users.*', 'user_skill.skill_name', 'user_skill.rate', 'applicant.applicant_id')
+            ->select('users.*', 'user_skill.skill_name', 'user_skill.rate', 'applicant.applicant_id', 'applicant.current_step', 'technical_test.average_score', 'technical_test.technical_test_id', 'interview.interview_score', 'interview.status as interview_status', 'interview.interview_id')
             ->get();
+
         $job = Job::find($id);
 
         $totalSkill = $jobSkills->count();
@@ -544,7 +550,9 @@ class applicantController extends Controller
 
         return view('hr.compare_applicant')->with([
             'members' => $new_arr,
-            'job' => $job
+            'job' => $job,
+            "interviewer" => $interviewer,
+            "intvMethod" => $intvMethod
         ]);
     }
 

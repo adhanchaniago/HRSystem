@@ -28,6 +28,6 @@ class ReportController extends Controller
 //        }
 //
 //        print "push sukses";
-        //return view('hr.report');
+        return view('hr.report');
     }
 }

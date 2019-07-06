@@ -122,7 +122,7 @@
                         <div class="ibox-head">
                             <div class="ibox-title">Tasks</div>
                             <div>
-                                <a class="btn btn-info btn-sm" href="#" data-toggle="modal" data-target="#taskModal">New Task</a>
+                                <a class="btn btn-info btn-sm" href="#" data-toggle="modal" data-target="#taskModal"><i class="fa fa-plus"></i> New Task</a>
                             </div>
                         </div>
                         <div class="ibox-body">
@@ -188,7 +188,7 @@
                             </div>
                         </div>
                         <div class="ibox-body">
-                            <table class="table table-striped">
+                            <table class="table table-striped toDataTable">
                                 <thead>
                                 <tr>
                                     <th>Job</th>
@@ -314,6 +314,10 @@
                 margin-left: 10px;
             }
         </style>
+
+            <script>
+                $(".toDataTable").DataTable();
+            </script>
 
     </div>
     <!-- END PAGE CONTENT-->

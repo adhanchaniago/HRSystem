@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Talent Finder</title>
     <!-- GLOBAL MAINLY STYLES-->
     <link href="/assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -61,14 +62,14 @@
                 <li>
                     <a class="nav-link sidebar-toggler js-sidebar-toggler"><i class="ti-menu"></i></a>
                 </li>
-                <li>
-                    <form class="navbar-search" action="javascript:;">
-                        <div class="rel">
-                            <span class="search-icon"><i class="ti-search"></i></span>
-                            <input class="form-control" placeholder="Search here...">
-                        </div>
-                    </form>
-                </li>
+                {{--<li>--}}
+                    {{--<form class="navbar-search" action="javascript:;">--}}
+                        {{--<div class="rel">--}}
+                            {{--<span class="search-icon"><i class="ti-search"></i></span>--}}
+                            {{--<input class="form-control" placeholder="Search here...">--}}
+                        {{--</div>--}}
+                    {{--</form>--}}
+                {{--</li>--}}
             </ul>
             <!-- END TOP-LEFT TOOLBAR-->
             <!-- START TOP-RIGHT TOOLBAR-->

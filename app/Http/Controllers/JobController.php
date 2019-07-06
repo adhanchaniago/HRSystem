@@ -379,12 +379,27 @@ class JobController extends Controller
 
     public function ShowTechnicalTest(){
 
-        $technical = DB::table('technical_test')
-            ->join('applicant', 'technical_test.applicant_id', '=', 'applicant.applicant_id')
-            ->join('users', 'applicant.user_id', '=', 'users.user_id')
-            ->join('job', 'applicant.job_id', '=', 'job.job_id')
-            ->select('users.first_name', 'users.last_name', 'job.job_name', 'applicant.applied_date', 'technical_test.*')
-            ->get();
+        if (Auth::user()->role_id == 'ROLE001') {
+
+            $technical = DB::table('technical_test')
+                ->join('applicant', 'technical_test.applicant_id', '=', 'applicant.applicant_id')
+                ->join('users', 'applicant.user_id', '=', 'users.user_id')
+                ->join('job', 'applicant.job_id', '=', 'job.job_id')
+                ->select('users.first_name', 'users.last_name', 'job.job_name', 'applicant.applied_date', 'technical_test.*')
+                ->where('technical_test.status', '=', 'not_tested')
+                ->get();
+
+        }else{
+
+            $technical = DB::table('technical_test')
+                ->join('applicant', 'technical_test.applicant_id', '=', 'applicant.applicant_id')
+                ->join('users', 'applicant.user_id', '=', 'users.user_id')
+                ->join('job', 'applicant.job_id', '=', 'job.job_id')
+                ->select('users.first_name', 'users.last_name', 'job.job_name', 'applicant.applied_date', 'technical_test.*')
+                ->where('technical_test.status', '=', 'not_tested')
+                ->where('applicant.user_id', '=', Auth::user()->user_id)
+                ->get();
+        }
 
         return view('hr.technical_test')->with([
             "technical" => $technical

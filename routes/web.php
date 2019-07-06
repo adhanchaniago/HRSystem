@@ -17,6 +17,11 @@ Route::get('/dashboard', 'UserController@ShowDashboard');
 Route::get('/login', function(){return view('auth.login');});
 Route::get('/register', function(){return view('auth.register');});
 
+Route::get('/logout', 'UserController@UserLogout');
+Route::post('/login', 'UserController@UserSignIn');
+Route::post('/register', 'UserController@UserRegister');
+
+Route::post('/search', 'SearchController@SearchData');
 
 Route::get('/report', 'ReportController@ShowReport');
 Route::get('/mailbox', 'UserController@ShowMailbox');
@@ -96,7 +101,4 @@ Route::get('/document/applicant', 'DocumentController@ShowApplicantDocument');
 Route::get('/document/recruiter', 'DocumentController@ShowRecruiterDocument');
 Route::get('/document/type', 'DocumentController@ShowDocumentType');
 
-Route::get('/logout', 'UserController@UserLogout');
-Route::post('/login', 'UserController@UserSignIn');
-Route::post('/register', 'UserController@UserRegister');
 
