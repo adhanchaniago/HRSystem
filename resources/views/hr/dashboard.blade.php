@@ -161,19 +161,21 @@
             <div class="row">
                 @foreach($jobs as $job)
                     <div class="col-lg-3 col-md-6">
-                        <div class="ibox">
-                            <div class="ibox-body">
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <h4 class="m-b-5 text-success">{{$job->job_name}}</h4>
-                                        <div class="m-b-5">{{$job->department_name}}</div>
-                                    </div>
-                                    <div class="col-md-4 text-center">
-                                        <i class="ti-write" style="font-size: 40px"></i>
+                        <a href="{{url('/job/details/'.$job->job_id)}}" style="text-decoration: none; color: inherit;">
+                            <div class="ibox hvr-underline-from-center">
+                                <div class="ibox-body">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <h4 class="m-b-5 text-info">{{$job->job_name}}</h4>
+                                            <div class="m-b-5">{{$job->department_name}}</div>
+                                        </div>
+                                        <div class="col-md-4 text-center">
+                                            <img src="/assets/img/tfinder.png" alt="">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 @endforeach
             </div>
@@ -184,13 +186,14 @@
                             <div class="ibox-title">My Application</div>
                             <div class="ibox-tools">
                                 <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
-                                <a href="#">View All</a>
+                                <a href="{{url('/applied-jobs')}}">View All</a>
                             </div>
                         </div>
                         <div class="ibox-body">
                             <table class="table table-striped toDataTable">
                                 <thead>
                                 <tr>
+                                    <th>#</th>
                                     <th>Job</th>
                                     <th>Department</th>
                                     <th>Status</th>
@@ -198,11 +201,12 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($applications as $app)
+                                @foreach($applications as $idx=>$app)
                                     <tr>
+                                        <td data-sort="{{$idx+1}}">{{$idx+1}}</td>
                                         <td>{{$app->job_name}}</td>
                                         <td>{{$app->department_name}}</td>
-                                        <td><span class="badge badge-primary">{{$app->status}}</span></td>
+                                        <td><span class="badge badge-primary">{{ucwords(str_replace('_',' ', $app->current_step)).' ('.ucfirst(str_replace('_',' ', $app->status)).')'}}</span></td>
                                         <td>{{$app->applied_date}}</td>
                                     </tr>
                                 @endforeach
@@ -216,84 +220,39 @@
                         <div class="ibox-head">
                             <div class="ibox-title">Messages</div>
                             <div>
-                                <a class="btn btn-info btn-sm" href="javascript:;">New Task</a>
+                                <a class="btn btn-info btn-sm" href="{{url('/mailbox')}}">View Mail</a>
                             </div>
                         </div>
-                        <div class="ibox-body">
-                            <ul class="list-group list-group-divider list-group-full tasks-list">
-                                <li class="list-group-item task-item">
-                                    <div>
-                                        <label class="ui-checkbox ui-checkbox-gray ui-checkbox-success">
-                                            <input type="checkbox">
-                                            <span class="input-span"></span>
-                                            <span class="task-title">Meeting with Eliza</span>
-                                        </label>
-                                    </div>
-                                    <div class="task-data"><small class="text-muted">10 July 2018</small></div>
-                                    <div class="task-actions">
-                                        <a href="javascript:;"><i class="fa fa-edit text-muted m-r-10"></i></a>
-                                        <a href="javascript:;"><i class="fa fa-trash text-muted"></i></a>
-                                    </div>
-                                </li>
-                                <li class="list-group-item task-item">
-                                    <div>
-                                        <label class="ui-checkbox ui-checkbox-gray ui-checkbox-success">
-                                            <input type="checkbox" checked="">
-                                            <span class="input-span"></span>
-                                            <span class="task-title">Check your inbox</span>
-                                        </label>
-                                    </div>
-                                    <div class="task-data"><small class="text-muted">22 May 2018</small></div>
-                                    <div class="task-actions">
-                                        <a href="javascript:;"><i class="fa fa-edit text-muted m-r-10"></i></a>
-                                        <a href="javascript:;"><i class="fa fa-trash text-muted"></i></a>
-                                    </div>
-                                </li>
-                                <li class="list-group-item task-item">
-                                    <div>
-                                        <label class="ui-checkbox ui-checkbox-gray ui-checkbox-success">
-                                            <input type="checkbox">
-                                            <span class="input-span"></span>
-                                            <span class="task-title">Create Financial Report</span>
-                                        </label>
-                                        <span class="badge badge-danger m-l-5"><i class="ti-alarm-clock"></i> 1 hrs</span>
-                                    </div>
-                                    <div class="task-data"><small class="text-muted">No due date</small></div>
-                                    <div class="task-actions">
-                                        <a href="javascript:;"><i class="fa fa-edit text-muted m-r-10"></i></a>
-                                        <a href="javascript:;"><i class="fa fa-trash text-muted"></i></a>
-                                    </div>
-                                </li>
-                                <li class="list-group-item task-item">
-                                    <div>
-                                        <label class="ui-checkbox ui-checkbox-gray ui-checkbox-success">
-                                            <input type="checkbox" checked="">
-                                            <span class="input-span"></span>
-                                            <span class="task-title">Send message to Mick</span>
-                                        </label>
-                                    </div>
-                                    <div class="task-data"><small class="text-muted">04 Apr 2018</small></div>
-                                    <div class="task-actions">
-                                        <a href="javascript:;"><i class="fa fa-edit text-muted m-r-10"></i></a>
-                                        <a href="javascript:;"><i class="fa fa-trash text-muted"></i></a>
-                                    </div>
-                                </li>
-                                <li class="list-group-item task-item">
-                                    <div>
-                                        <label class="ui-checkbox ui-checkbox-gray ui-checkbox-success">
-                                            <input type="checkbox">
-                                            <span class="input-span"></span>
-                                            <span class="task-title">Create new page</span>
-                                        </label>
-                                        <span class="badge badge-success m-l-5">2 Days</span>
-                                    </div>
-                                    <div class="task-data"><small class="text-muted">07 Dec 2018</small></div>
-                                    <div class="task-actions">
-                                        <a href="javascript:;"><i class="fa fa-edit text-muted m-r-10"></i></a>
-                                        <a href="javascript:;"><i class="fa fa-trash text-muted"></i></a>
-                                    </div>
-                                </li>
-                            </ul>
+                        <div class="ibox-body" style="overflow-y: scroll; height:400px; max-width: 100%; overflow-x: hidden;">
+                            @if(count($inbox)>0)
+                                @foreach($inbox as $mail)
+                                    <a href="{{url('/mailbox/'.$mail->message_id)}}" style="text-decoration: none; color: inherit;">
+                                        <div class="row m-b-10 hvr-grow">
+                                            <div class="col-md-3">
+                                                @if($mail->photo_url != null || $mail->photo_url != "")
+                                                    <div class="rounded-img-md" style="background-image: url('{{$mail->photo_url}}')"></div>
+                                                @else
+                                                    <div class="rounded-img-md" style="background-image: url('/assets/img/admin-avatar.png')"></div>
+                                                @endif
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="row">
+                                                    <div class="col-md-7 font-strong">{{$mail->first_name.' '.$mail->last_name}}</div>
+                                                    <div class="col-md-5 text-right">
+                                                        <small class="text-muted">{{TimeSince(strtotime(now('Asia/Jakarta')) - strtotime($mail->created_at))}} ago</small>
+                                                    </div>
+                                                </div>
+                                                <div class="font-13">{{$mail->subject}}</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <hr>
+                                @endforeach
+                            @else
+                                <div>
+                                    <h6 class="text-muted">There is no mail for you yet.</h6>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -138,10 +138,23 @@
                 {{--<button type="submit">submit</button>--}}
             {{--</form>--}}
             <div class="col-md-3 p-l-15 p-r-15">
-                <div>
-                    <h5 class="text-info"><b><i class="fa fa-clipboard"></i> Technical Test</b></h5>
-                    <hr>
+                <div class="row" id="technicalDefaultDiv">
+                    <div class="col-md-9">
+                        <h5 class="text-info"><b><i class="fa fa-clipboard"></i> Technical Test</b></h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="text-info"><a href="#" id="technicalSearchBtn" onclick="ShowHideSearch(this.id, 'technicalSearchDiv', 'technicalDefaultDiv', null)" style="text-decoration: none; color: inherit"><i class="fa fa-search"></i></a></h5>
+                    </div>
                 </div>
+                <div class="row hidden" id="technicalSearchDiv">
+                    <div class="col-md-9">
+                        <input id="technicalSearch" class="input-bottom-border" placeholder="Search here...">
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="text-info"><a href="#" id="technicalCancelSearchBtn" onclick="ShowHideSearch(this.id, 'technicalDefaultDiv', 'technicalSearchDiv', 'technicalSearch')" style="text-decoration: none; color: inherit"><i class="fa fa-times"></i></a></h5>
+                    </div>
+                </div>
+                <hr>
                 <div id="technicalList" style="overflow-y: scroll; height:400px; max-width: 100%; overflow-x: hidden;">
 
                     @if(count($technical_test) > 0)
@@ -181,10 +194,23 @@
             </div>
 
             <div class="col-md-3 p-l-15 p-r-15">
-                <div>
-                    <h5 class="text-warning"><b><i class="fa fa-users"></i> Interview</b></h5>
-                    <hr>
+                <div class="row" id="interviewDefaultDiv">
+                    <div class="col-md-9">
+                        <h5 class="text-warning"><b><i class="fa fa-users"></i> interview</b></h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="text-warning"><a href="#" id="interviewSearchBtn" onclick="ShowHideSearch(this.id, 'interviewSearchDiv', 'interviewDefaultDiv', null)" style="text-decoration: none; color: inherit"><i class="fa fa-search"></i></a></h5>
+                    </div>
                 </div>
+                <div class="row hidden" id="interviewSearchDiv">
+                    <div class="col-md-9">
+                        <input id="interviewSearch" class="input-bottom-border" placeholder="Search here...">
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="text-warning"><a href="#" id="interviewCancelSearchBtn" onclick="ShowHideSearch(this.id, 'interviewDefaultDiv', 'interviewSearchDiv', 'interviewSearch')" style="text-decoration: none; color: inherit"><i class="fa fa-times"></i></a></h5>
+                    </div>
+                </div>
+                <hr>
                 <div id="interviewList" style="overflow-y: scroll; height:400px; max-width: 100%; overflow-x: hidden;">
 
                     @if(count($interviews) > 0)
@@ -224,10 +250,23 @@
             </div>
 
             <div class="col-md-3 p-l-15 p-r-15">
-                <div>
-                    <h5 class="text-success"><b><i class="fa fa-check-square-o"></i> Final Result</b></h5>
-                    <hr>
+                <div class="row" id="finalDefaultDiv">
+                    <div class="col-md-9">
+                        <h5 class="text-success"><b><i class="fa fa-check-square-o"></i> Final Result</b></h5>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="text-success"><a href="#" id="finalSearchBtn" onclick="ShowHideSearch(this.id, 'finalSearchDiv', 'finalDefaultDiv', null)" style="text-decoration: none; color: inherit"><i class="fa fa-search"></i></a></h5>
+                    </div>
                 </div>
+                <div class="row hidden" id="finalSearchDiv">
+                    <div class="col-md-9">
+                        <input id="finalSearch" class="input-bottom-border" placeholder="Search here...">
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="text-success"><a href="#" id="finalCancelSearchBtn" onclick="ShowHideSearch(this.id, 'finalDefaultDiv', 'finalSearchDiv', 'finalSearch')" style="text-decoration: none; color: inherit"><i class="fa fa-times"></i></a></h5>
+                    </div>
+                </div>
+                <hr>
                 <div id="finalList" style="overflow-y: scroll; height:400px; max-width: 100%; overflow-x: hidden;">
                     @if(count($finals) > 0)
                         @foreach($finals as $fin)
@@ -273,6 +312,18 @@
             SearchApplicant("waitingSearch", "waitingList");
         });
 
+        $("#technicalSearch").on('change keyup', function(){
+            SearchApplicant("technicalSearch", "technicalList");
+        });
+
+        $("#interviewSearch").on('change keyup', function(){
+            SearchApplicant("interviewSearch", "interviewList");
+        });
+
+        $("#finalSearch").on('change keyup', function(){
+            SearchApplicant("finalSearch", "finalList");
+        });
+
         function ShowHideSearch(buttonId, divToShow, divToHide, searchField){
             $("#"+buttonId).click(function(){
                 $("#"+divToShow).removeClass("hidden");
@@ -311,7 +362,7 @@
                         for(var i = 0; i<length; i++) {
                             result += '<div class="row">' +
                                 '           <div class="col-md-12">' +
-                                '               <a href="/applicant/' + data[i]["applicant_id"] + '" style="text-decoration: none; color: inherit;">' +
+                                '               <a href="/'+data[i]["link"]+'/' + data[i]["returnId"] + '" style="text-decoration: none; color: inherit;">' +
                                 '                   <div class="ibox hvr-grow" style="width: 100%">' +
                                 '                       <div class="ibox-body">' +
                                 '                           <div class="row">' +

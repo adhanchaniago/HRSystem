@@ -52,10 +52,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="text-right m-b-10">
-                        <button class="btn btn-secondary"><i class="fa fa-pencil"></i> Edit Job</button>
-                        <a class="btn btn-danger" href="{{url('/job/deactive-job/'.$job->job_id)}}"><i class="fa fa-times"></i> Deactive Job</a>
-                    </div>
+                    @if(Auth::user()->role_id == "ROLE001")
+                        <div class="text-right m-b-10">
+                            <button class="btn btn-default"><i class="fa fa-pencil"></i> Edit Job</button>
+                            <a class="btn btn-danger" href="{{url('/job/deactive-job/'.$job->job_id)}}"><i class="fa fa-times"></i> Deactive Job</a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -64,47 +66,49 @@
                 <div class="ibox-head">
                     <div class="ibox-title">Technical Test</div>
                     <div class="ibox-tools">
-                        <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#appProgressModal"><i class="fa fa-plus font-14"></i></button>
-                        <div class="modal fade" id="appProgressModal">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
+                        @if(Auth::user()->role_id == "ROLE001")
+                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#appProgressModal"><i class="fa fa-plus font-14"></i></button>
+                            <div class="modal fade" id="appProgressModal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
 
-                                    <!-- Modal Header -->
-                                    <div class="modal-header">
-                                        <h4 class="modal-title"><i class="fa fa-plus"></i> Add Technical Test</h4>
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    </div>
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title"><i class="fa fa-plus"></i> Add Technical Test</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
 
-                                    <form action="{{url("/job/add-application-progress/".$job->job_id)}}" method="post" enctype="multipart/form-data">
-                                    {{csrf_field()}}
-                                    <!-- Modal body -->
-                                        <div class="modal-body">
-                                            <div class="form-group">
-                                                <label for="">Application Progress</label>
-                                                <div class="row m-b-10">
-                                                    <div class="col-md-8">
-                                                        <input type="text" name="progress_name" placeholder="Progress Name" class="form-control" required>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <input type="number" name="sequence" placeholder="Sequence" class="form-control" required>
+                                        <form action="{{url("/job/add-application-progress/".$job->job_id)}}" method="post" enctype="multipart/form-data">
+                                        {{csrf_field()}}
+                                        <!-- Modal body -->
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label for="">Application Progress</label>
+                                                    <div class="row m-b-10">
+                                                        <div class="col-md-8">
+                                                            <input type="text" name="progress_name" placeholder="Progress Name" class="form-control" required>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <input type="number" name="sequence" placeholder="Sequence" class="form-control" required>
+                                                        </div>
                                                     </div>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label for="">Attachment</label>
+                                                    <input type="file" name="attachment" placeholder="Attachment" class="form-control" required>
+                                                </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="">Attachment</label>
-                                                <input type="file" name="attachment" placeholder="Attachment" class="form-control" required>
-                                            </div>
-                                        </div>
 
-                                        <!-- Modal footer -->
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-success">Submit</button>
-                                        </div>
-                                    </form>
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-success">Submit</button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </div>
                 <div class="ibox-body">
@@ -118,46 +122,48 @@
                                     {{$prog->progress_name}}
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="modal fade" id="appProgressAttchModal{{$prog->application_progress_id}}">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
+                                    @if(Auth::user()->role_id == "ROLE001")
+                                        <div class="modal fade" id="appProgressAttchModal{{$prog->application_progress_id}}">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
 
-                                                <!-- Modal Header -->
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title"><i class="fa fa-plus"></i> Upload Attachment for {{$prog->progress_name}}</h4>
-                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    <!-- Modal Header -->
+                                                    <div class="modal-header">
+                                                        <h4 class="modal-title"><i class="fa fa-plus"></i> Upload Attachment for {{$prog->progress_name}}</h4>
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                    </div>
+
+                                                    <form action="{{url("/job/upload-progress-document/".$prog->application_progress_id)}}" method="post" enctype="multipart/form-data">
+                                                    {{csrf_field()}}
+                                                    <!-- Modal body -->
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <label for="">Attachment</label>
+                                                                <input type="file" name="attachment" placeholder="Attachment" class="form-control" required>
+                                                            </div>
+                                                            <div class="m-t-15">
+                                                                <i><span style="color:red">*</span>If any, the existing file will be replaced with the new one.</i>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Modal footer -->
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-success">Submit</button>
+                                                        </div>
+                                                    </form>
                                                 </div>
-
-                                                <form action="{{url("/job/upload-progress-document/".$prog->application_progress_id)}}" method="post" enctype="multipart/form-data">
-                                                {{csrf_field()}}
-                                                <!-- Modal body -->
-                                                    <div class="modal-body">
-                                                        <div class="form-group">
-                                                            <label for="">Attachment</label>
-                                                            <input type="file" name="attachment" placeholder="Attachment" class="form-control" required>
-                                                        </div>
-                                                        <div class="m-t-15">
-                                                            <i><span style="color:red">*</span>If any, the existing file will be replaced with the new one.</i>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Modal footer -->
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-success">Submit</button>
-                                                    </div>
-                                                </form>
                                             </div>
                                         </div>
-                                    </div>
-                                    @if($prog->document_url != null || $prog->document_url != "")
-                                        <a href="{{$prog->document_url}}" class="btn btn-success btn-xs" download="{{$prog->progress_name}}"><i class="fa fa-download"></i></a>
-                                        <a href="#" class="btn btn-info btn-xs" data-toggle="modal" data-target="#appProgressAttchModal{{$prog->application_progress_id}}"><i class="fa fa-upload"></i></a>
-                                    @else
-                                        <a href="#" class="btn btn-info btn-xs" data-toggle="modal" data-target="#appProgressAttchModal{{$prog->application_progress_id}}"><i class="fa fa-upload"></i></a>
-                                        <a href="#" class="btn btn-default btn-xs disabled"><i class="fa fa-download"></i></a>
+                                        @if($prog->document_url != null || $prog->document_url != "")
+                                            <a href="{{$prog->document_url}}" class="btn btn-success btn-xs" download="{{$prog->progress_name}}"><i class="fa fa-download"></i></a>
+                                            <a href="#" class="btn btn-info btn-xs" data-toggle="modal" data-target="#appProgressAttchModal{{$prog->application_progress_id}}"><i class="fa fa-upload"></i></a>
+                                        @else
+                                            <a href="#" class="btn btn-info btn-xs" data-toggle="modal" data-target="#appProgressAttchModal{{$prog->application_progress_id}}"><i class="fa fa-upload"></i></a>
+                                            <a href="#" class="btn btn-default btn-xs disabled"><i class="fa fa-download"></i></a>
+                                        @endif
+                                        <a href="/job/delete-progress/{{$prog->application_progress_id}}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></a>
                                     @endif
-                                    <a href="/job/delete-progress/{{$prog->application_progress_id}}" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></a>
                                 </div>
                             </div>
                         @endforeach

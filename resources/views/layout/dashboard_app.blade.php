@@ -90,6 +90,7 @@
                             </div>
                         </li>
                         @if($unread>0)
+                            <ul class="list-group list-group-divider list-group-full tasks-list">
                             @foreach($mail_not_read as $mail)
                                 <li class="list-group list-group-divider scroller" style="max-height: 240px;" data-color="#71808f">
                                     <div>
@@ -111,6 +112,7 @@
                                     </div>
                                 </li>
                             @endforeach
+                            </ul>
                         @else
                             <li class="list-group list-group-divider scroller" data-color="#71808f">
                                 <div>

@@ -65,13 +65,18 @@
     <div style="padding:1cm;">
         <div class="text-center">
             <img src="/assets/img/tfinder.png" alt="logo" width="140px" class="center">
-            <h4>Applicant Report</h4>
+            <h4>Applicant Test Report</h4>
         </div>
         <hr style="border: solid 1px black;">
         <div style="padding:15px">
             <div class="row">
                 <div class="col-md-6">
                     <table>
+                        <tr>
+                            <td><b>Job</b></td>
+                            <td>:</td>
+                            <td>{{$tech->job_name}} ({{$tech->department_name}})</td>
+                        </tr>
                         <tr>
                             <td><b>Applicant Name</b></td>
                             <td>:</td>
@@ -90,6 +95,7 @@
                     </table>
                 </div>
                 <div class="col-md-6 text-right">
+
                     <small>Printed by <b>{{Auth::user()->first_name.' '.Auth::user()->last_name}}</b><br>{{date('l, d F Y', strtotime(now('Asia/Jakarta')))}}</small>
                 </div>
             </div>

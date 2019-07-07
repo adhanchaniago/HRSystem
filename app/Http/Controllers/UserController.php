@@ -238,6 +238,8 @@ class UserController extends Controller
                 ->join('department', 'job.department_id','=','department.department_id')
             ->select('job.*', 'department.department_name')
             ->where('job.status', '=', 'open')
+            ->where('job.active_date', '<=', now('Asia/Jakarta'))
+            ->where('job.expired_date', '>=', now('Asia/Jakarta'))
             ->orderBy('job.created_at', 'desc')
             ->limit(4)
             ->get();
@@ -246,8 +248,16 @@ class UserController extends Controller
             ->join('users', 'applicant.user_id', '=', 'users.user_id')
             ->join('job', 'applicant.job_id', '=', 'job.job_id')
             ->join('department', 'job.department_id', '=', 'department.department_id')
-            ->select('applicant.applied_date', 'applicant.status', 'users.*','job.job_name', 'department.department_name')
+            ->select('applicant.applied_date', 'applicant.status', 'applicant.current_step', 'users.*','job.job_name', 'department.department_name')
             ->where('applicant.user_id', '=', Auth::user()->user_id)
+            ->get();
+
+        $inbox = DB::table('message')
+            ->join('users', 'message.from', '=', 'users.user_id')
+            ->where('to', 'like', '%'.Auth::user()->email.'%')
+            ->select('users.first_name', 'users.last_name', 'users.photo_url', 'message.*')
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
             ->get();
 
         return view('hr.dashboard')->with([
@@ -258,7 +268,8 @@ class UserController extends Controller
             "applicants" => $applicants,
             "accepted" => $accepted,
             "rejected" => $rejected,
-            "tasks" => $task
+            "tasks" => $task,
+            "inbox" => $inbox
         ]);
     }
 
