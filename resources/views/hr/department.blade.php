@@ -40,6 +40,60 @@
         </div>
         <div class="row">
             @foreach($dept as $dep)
+                <div class="modal fade" id="updateDeptModal{{$dep->department_id}}">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title"><i class="fa fa-edit"></i> Update Department</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <form action="{{url("/department/update/".$dep->department_id)}}" method="post">
+                            {{csrf_field()}}
+
+                            <!-- Modal body -->
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <input type="text" name="department_name" value="{{$dep->department_name}}" placeholder="Input Department Name" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-success">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="deleteModal{{$dep->department_id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title"><i class="fa fa-trash"></i> Delete Department</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <h6>Are you sure want to delete department {{$dep->department_name}} ?</h6>
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <a href="/department/delete/{{$dep->department_id}}" type="submit" class="btn btn-success">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-md-4">
                     <div class="ibox">
                         <div class="ibox-body">
@@ -55,10 +109,10 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div>
-                                        <button class="btn btn-secondary btn-xs" data-toggle="tooltip" data-placement="right" title="Edit"><i class="fa fa-pencil"></i></button>
+                                        <button class="btn btn-secondary btn-xs" data-toggle="modal" data-target="#updateDeptModal{{$dep->department_id}}"><i class="fa fa-pencil"></i></button>
                                     </div>
                                     <div>
-                                        <button class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="right" title="Delete"><i class="fa fa-times"></i></button>
+                                        <button class="btn btn-danger btn-xs" data-toggle="modal" data-target="#deleteModal{{$dep->department_id}}"><i class="fa fa-times"></i></button>
                                     </div>
                                 </div>
                             </div>

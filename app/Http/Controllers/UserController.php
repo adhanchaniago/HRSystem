@@ -23,7 +23,7 @@ class UserController extends Controller
     //
     public function userSignIn(Request $request){
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
-            return redirect('/dashboard');
+            return redirect('/dashboard')->with(['success'=>'Welcome, '.Auth::user()->first_name]);
         }
         return redirect('/login')->with('loginError', 'Username or Password is Incorrect.');
     }
@@ -229,7 +229,7 @@ class UserController extends Controller
             ->join('users', 'applicant.user_id', '=', 'users.user_id')
             ->join('job', 'applicant.job_id', '=', 'job.job_id')
             ->join('department', 'job.department_id', '=', 'department.department_id')
-            ->select('applicant.applied_date', 'applicant.status', 'users.first_name', 'users.last_name', 'job.job_name', 'department.department_name')
+            ->select('applicant.applied_date', 'applicant.status', 'applicant.current_step','users.first_name', 'users.last_name', 'job.job_name', 'department.department_name')
             ->where('recruiter_id', '=', Auth::user()->user_id)
             ->get();
 
@@ -278,6 +278,22 @@ class UserController extends Controller
 
         return view('hr.member_list')->with([
             "members" => $members
+        ]);
+    }
+
+    public function ShowMemberDetails($id){
+
+        $member = User::find($id);
+
+        $exp = UserExperience::all()->where('user_id', '=', $id);
+        $skill = UserSkill::all()->where('user_id', '=', $id);
+        $edu = UserEducation::all()->where('user_id', '=', $id);
+
+        return view('hr.member_details')->with([
+            "member" => $member,
+            "experiences" => $exp,
+            "educations" => $edu,
+            "skills" => $skill
         ]);
     }
 

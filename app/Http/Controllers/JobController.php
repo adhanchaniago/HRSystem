@@ -125,13 +125,13 @@ class JobController extends Controller
     {
         $job = DB::table('job')
             ->join('department', 'job.department_id', '=', 'department.department_id')
-            ->select('job.job_id', 'job.department_id', 'department.department_name', 'job.job_name',
-                'job.description', 'job.active_date', 'job.expired_date', 'job.salary')
+            ->select('job.*', 'department.department_name')
             ->where('job.job_id', '=', $id)
             ->first();
 
-        $skills = JobSkill::all()->where('job_id', '=', $id);
+        $department = Department::all();
 
+        $skills = JobSkill::all()->where('job_id', '=', $id);
 
         $progress = DB::table('application_progress')
             //->select('*')
@@ -146,8 +146,28 @@ class JobController extends Controller
                 'job' => $job,
                 'skills' => $skills,
                 'progress' => $progress,
+                'department' => $department,
             ]
         );
+    }
+
+    public function UpdateJob(Request $request, $id){
+        $job = Job::find($id);
+
+        $job->department_id = $request->job_department;
+        $job->job_name = $request->job_name;
+        $job->description = $request->job_desc;
+        $job->salary = $request->salary;
+        $job->minimum_age = $request->min_age;
+        $job->minimum_experience = $request->min_exp;
+        $job->active_date = $request->active_date;
+        $job->expired_date = $request->expired_date;
+
+        $this->AddSkill($id, $request);
+
+        $job->save();
+
+        return redirect('/job/details/'.$id)->with(['success', 'Update Job Success!']);
     }
 
     public function DeactiveJob($id)

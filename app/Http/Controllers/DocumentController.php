@@ -15,8 +15,9 @@ class DocumentController extends Controller
     public function ShowApplicantDocument(){
         $docs = DB::table('document')
             ->join('users', 'document.regarding_id', '=', 'users.user_id')
+            ->join('document_type', 'document.document_type_id', '=', 'document_type.document_type_id')
             ->select('users.first_name', 'users.last_name', 'users.role_id', 'users.role_id',
-                'document.document_name', 'document.document_url', 'document.document_type_id', 'document.created_at')
+                'document.document_name', 'document.document_url', 'document_type.document_type_name', 'document.created_at')
             ->where('users.role_id', '=', 'ROLE002')
             ->get();
 
@@ -29,8 +30,9 @@ class DocumentController extends Controller
     public function ShowRecruiterDocument(){
         $docs = DB::table('document')
             ->join('users', 'document.regarding_id', '=', 'users.user_id')
+            ->join('document_type', 'document.document_type_id', '=', 'document_type.document_type_id')
             ->select('users.first_name', 'users.last_name', 'users.role_id', 'users.role_id',
-                'document.document_name', 'document.document_url', 'document.document_type_id', 'document.created_at')
+                'document.document_name', 'document.document_url', 'document_type.document_type_name', 'document.created_at')
             ->where('users.role_id', '=', 'ROLE001')
             ->get();
 
@@ -87,6 +89,14 @@ class DocumentController extends Controller
         return redirect('/document/type')->with([
             "success" => "Success Add New Document Type"
         ]);
+    }
+
+    public function UpdateDocumentType(Request $request, $id){
+        $doc = DocumentType::find($id);
+        $doc->document_type_name = $request->type_name;
+        $doc->save();
+
+        return redirect('/document/type')->with('success', 'Document Type Updated.');
     }
 
     public function DeleteDocumentType($id){

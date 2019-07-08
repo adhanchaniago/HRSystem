@@ -124,7 +124,7 @@
                                 <th>Department</th>
                                 <th>Active Date</th>
                                 <th>Expired Date</th>
-                                <th>Actions</th>
+                                <th class="text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -138,10 +138,8 @@
                                         <td>{{$job->department_name}}</td>
                                         <td>{{$job->active_date}}</td>
                                         <td>{{$job->expired_date}}</td>
-                                        <td>
+                                        <td class="text-center">
                                             <a href="{{url('/job/details/'.$job->job_id)}}" class="btn btn-primary btn-xs m-r-5" data-toggle="tooltip" data-original-title="View Detail"><i class="fa fa-eye font-14"></i></a>
-                                            <button class="btn btn-default btn-xs m-r-5" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil font-14"></i></button>
-                                            <a href="{{url('/job/deactive-job/'.$job->job_id)}}" class="btn btn-danger btn-xs" data-toggle="tooltip" data-original-title="Deactive"><i class="fa fa-times font-14"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach

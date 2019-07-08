@@ -51,6 +51,7 @@ Route::get('/job/inactive', 'JobController@ShowInactiveJob');
 Route::get('/job/{id}/applicants', 'ApplicantController@ShowJobApplicant');
 
 Route::get('/job/details/{id}', 'JobController@JobDetail');
+Route::post('/job/edit/{id}', 'JobController@UpdateJob');
 Route::get('/job/deactive-job/{id}', 'JobController@DeactiveJob');
 Route::post('/job/reactive-job/{id}', 'JobController@ReactiveJob');
 Route::get('/job/delete-job/{id}', 'JobController@DeleteJob');
@@ -58,8 +59,10 @@ Route::get('/job/delete-progress/{id}', 'JobController@DeleteProgress');
 
 Route::get('/technical-test', 'JobController@ShowTechnicalTest');
 
+
 Route::get('/member/list', 'UserController@ShowAllMember');
 Route::post('/member/compare', 'UserController@CompareMember');
+Route::get('/member/{id}', 'UserController@ShowMemberDetails');
 
 
 Route::get('/applicant/all-job', 'JobController@ShowApplicantByJob');
@@ -91,14 +94,16 @@ Route::get('/interview/signer', 'ApplicantController@InterviewSigner');
 //Route::post('/interview/session/{code}', 'ApplicantController@InterviewSession');
 
 Route::get('/department', 'JobController@ShowAllDepartment');
-Route::get('/department/update/{id}', 'JobController@UpdateDepartment');
+Route::post('/department/update/{id}', 'JobController@UpdateDepartment');
 Route::get('/department/delete/{id}', 'JobController@DeleteDepartment');
 Route::post('/department/add-new-department', 'JobController@AddDepartment');
 
 Route::post('/document/add-new-document-type', 'DocumentController@AddDocumentType');
-Route::post('/document/delete-document-type/{id}', 'DocumentController@DeleteDocumentType');
 Route::get('/document/applicant', 'DocumentController@ShowApplicantDocument');
 Route::get('/document/recruiter', 'DocumentController@ShowRecruiterDocument');
+
 Route::get('/document/type', 'DocumentController@ShowDocumentType');
+Route::get('/document/type/delete/{id}', 'DocumentController@DeleteDocumentType');
+Route::post('/document/type/update/{id}', 'DocumentController@UpdateDocumentType');
 
 

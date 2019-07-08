@@ -1,6 +1,30 @@
 @extends('layout.dashboard_app')
 @section('content')
     <!-- START PAGE CONTENT-->
+    @if(Session::get('success'))
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <img width="100%" src="/assets/img/checkmark.gif" alt="">
+                            </div>
+                            <div class="col-md-9" style="display: flex;align-items: center">
+                                <h2 class="text-success">Welcome, Alim!</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $("#exampleModal").modal('show');
+            setInterval(function () {
+                $("#exampleModal").modal('hide');
+            },2000);
+        </script>
+    @endif
     <div class="page-content fade-in-up">
         @if(Auth::user()->role_id == "ROLE001")
             <div class="row">
@@ -67,7 +91,7 @@
                                                 <td>{{$ref->job_name}}</td>
                                                 <td>{{$ref->department_name}}</td>
                                                 <td>
-                                                    <span class="badge badge-primary">{{$ref->status}}</span>
+                                                    <span class="badge badge-primary">{{ucwords(str_replace('_',' ', $ref->current_step)).' ('.ucfirst(str_replace('_',' ', $ref->status)).')'}}</span>
                                                 </td>
                                                 <td>{{$ref->applied_date}}</td>
                                             </tr>
@@ -131,16 +155,14 @@
                                     @foreach($tasks as $task)
                                         <li class="list-group-item task-item">
                                             <div>
-                                                <label class="ui-checkbox ui-checkbox-gray ui-checkbox-success">
-                                                    <input type="checkbox" id="task-check" name="task-check" value="{{$task->task_id}}">
-                                                    <span class="input-span"></span>
+                                                <label>
                                                     <span class="task-title">{{$task->task_description}}</span>
                                                 </label>
                                             </div>
-                                            <div class="task-data"><small class="text-muted">{{$task->task_date}}</small></div>
+                                            <div><small class="text-muted">{{$task->task_date}}</small></div>
                                             <div class="task-actions">
-                                                <a href="javascript:;"><i class="fa fa-edit text-muted m-r-10"></i></a>
-                                                <a href="javascript:;"><i class="fa fa-trash text-muted"></i></a>
+                                                <a href="javascript:;"><i class="fa fa-check text-success m-r-10"></i></a>
+                                                <a href="javascript:;"><i class="fa fa-trash text-danger"></i></a>
                                             </div>
                                         </li>
                                     @endforeach

@@ -55,22 +55,28 @@
         @if(count($members) > 0)
             <div class="row">
                 @foreach($members as $app)
-                    <div class="col-md-3">
-                        <div class="ibox">
-                            <div class="ibox-body">
-                                <div class="text-center">
-                                    <div class="m-20">
-                                        @if($app->photo_url != null || $app->photo_url != "")
-                                            <div class="rounded-img-lg" style="background-image: url('{{$app->photo_url}}')"></div>
-                                        @else
-                                            <div class="rounded-img-lg" style="background-image: url('/assets/img/admin-avatar.png')"></div>
-                                        @endif
+                    <div class="col-md-4">
+                        <a href="{{url('/member/'.$app->user_id)}}" style="text-decoration: none; color: inherit;">
+                            <div class="ibox hvr-grow">
+                                <div class="ibox-body">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            @if($app->photo_url != null || $app->photo_url != "")
+                                                <div class="rounded-img-md" style="background-image: url('{{$app->photo_url}}')"></div>
+                                            @else
+                                                <div class="rounded-img-md" style="background-image: url('/assets/img/admin-avatar.png')"></div>
+                                            @endif
+                                        </div>
+                                        <div class="col-md-9">
+                                            <h6><b>{{$app->first_name." ".$app->last_name}}</b></h6>
+                                            <small>{{$app->degree.', '.$app->major}}</small>
+                                            <br>
+                                            <small class="text-info">{{$app->university}}</small>
+                                        </div>
                                     </div>
-                                    <h5><b>{{$app->first_name." ".$app->last_name}}</b></h5>
-                                    <h6 class="text-muted">{{$app->email}}</h6>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 @endforeach
             </div>
