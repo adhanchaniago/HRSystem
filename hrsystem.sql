@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 06, 2019 at 01:08 AM
+-- Generation Time: Jul 08, 2019 at 07:11 AM
 -- Server version: 10.1.26-MariaDB
 -- PHP Version: 7.1.9
 
@@ -48,8 +48,8 @@ INSERT INTO `applicant` (`applicant_id`, `job_id`, `user_id`, `recruiter_id`, `a
 ('APL0001', 'JOB0001', 'USR0002', 'USR0001', '2019-07-02', 'final', 'accepted', '2019-07-02 11:27:31', '2019-07-04 20:41:26'),
 ('APL0002', 'JOB0001', 'USR0005', NULL, '2019-07-02', 'final', 'accepted', '2019-07-02 11:32:56', '2019-07-04 20:45:43'),
 ('APL0003', 'JOB0001', 'USR0003', 'USR0001', '2019-07-03', 'final', 'accepted', '2019-07-03 00:42:43', '2019-07-05 09:24:49'),
-('APL0004', 'JOB0002', 'USR0002', NULL, '2019-07-06', 'technical_test', 'waiting', '2019-07-05 19:47:27', '2019-07-05 13:03:26'),
-('APL0005', 'JOB0002', 'USR0003', NULL, '2019-07-06', 'apply', 'waiting', '2019-07-05 19:47:27', '2019-07-05 19:47:27'),
+('APL0004', 'JOB0002', 'USR0002', NULL, '2019-07-06', 'final', 'waiting', '2019-07-05 19:47:27', '2019-07-06 11:19:47'),
+('APL0005', 'JOB0002', 'USR0003', NULL, '2019-07-06', 'final', 'accepted', '2019-07-05 19:47:27', '2019-07-06 20:40:43'),
 ('APL0006', 'JOB0002', 'USR0004', NULL, '2019-07-06', 'technical_test', 'waiting', '2019-07-05 19:47:27', '2019-07-05 14:52:22'),
 ('APL0007', 'JOB0002', 'USR0005', NULL, '2019-07-06', 'apply', 'waiting', '2019-07-05 19:47:27', '2019-07-05 19:47:27'),
 ('APL0008', 'JOB0002', 'USR0006', NULL, '2019-07-06', 'apply', 'waiting', '2019-07-05 19:47:27', '2019-07-05 19:47:27'),
@@ -125,12 +125,12 @@ CREATE TABLE `department` (
 INSERT INTO `department` (`department_id`, `department_name`, `created_at`, `updated_at`) VALUES
 ('DPT0001', 'Research and Development', NULL, NULL),
 ('DPT0002', 'Human Resources', NULL, NULL),
-('DPT0004', 'Marketing', NULL, NULL),
+('DPT0004', 'Marketing', NULL, '2019-07-07 21:01:13'),
 ('DPT0005', 'Legal', NULL, NULL),
 ('DPT0006', 'Support', NULL, NULL),
-('DPT0007', 'Services', NULL, NULL),
 ('DPT0008', 'IT', NULL, NULL),
-('DPT0009', 'Database', '2019-07-05 11:20:14', '2019-07-05 11:20:14');
+('DPT0009', 'Database', '2019-07-05 11:20:14', '2019-07-05 11:20:14'),
+('DPT0010', 'Service', '2019-07-07 21:02:26', '2019-07-07 21:02:26');
 
 -- --------------------------------------------------------
 
@@ -159,7 +159,9 @@ INSERT INTO `document` (`document_id`, `regarding_id`, `document_name`, `documen
 ('DOC0004', 'USR0002', 'My First CV', 'DTY0001', '/documents/user/USR0002My_First_CV_1562357183.doc', '2019-07-05 13:06:23', '2019-07-05 13:06:23'),
 ('DOC0005', 'APR0003', 'APR0003_Initial_Test.png', 'DTY0004', '/documents/test_attachment/APR0003_Initial_Test.png', '2019-07-05 14:15:02', '2019-07-05 14:15:02'),
 ('DOC0007', 'APL0004', 'APL0004APR0003InitialTest', 'DTY0003', '/documents/test_answers/APL0004/APL0004APR0003InitialTest.docx', '2019-07-05 22:46:03', '2019-07-05 22:46:03'),
-('DOC0008', 'APL0006', 'APL0006APR0003InitialTest', 'DTY0003', '/documents/test_answers/APL0006/APL0006APR0003InitialTest.doc', '2019-07-05 22:47:15', '2019-07-05 22:47:15');
+('DOC0008', 'APL0006', 'APL0006APR0003InitialTest', 'DTY0003', '/documents/test_answers/APL0006/APL0006APR0003InitialTest.doc', '2019-07-05 22:47:15', '2019-07-05 22:47:15'),
+('DOC0009', 'APL0005', 'APL0005APR0003InitialTest', 'DTY0003', '/documents/test_answers/APL0005/APL0005APR0003InitialTest.docx', '2019-07-07 03:16:19', '2019-07-07 03:16:19'),
+('DOC0010', 'USR0001', 'Terms and Conditions', 'DTY0005', '/documents/user/USR0001Terms_and_Conditions_1562560146.pdf', '2019-07-07 21:29:06', '2019-07-07 21:29:06');
 
 -- --------------------------------------------------------
 
@@ -180,9 +182,10 @@ CREATE TABLE `document_type` (
 
 INSERT INTO `document_type` (`document_type_id`, `document_type_name`, `created_at`, `updated_at`) VALUES
 ('DTY0001', 'CV', '2019-07-02 10:50:19', '2019-07-02 10:50:19'),
-('DTY0002', 'Certificate', '2019-07-02 10:50:19', '2019-07-02 10:50:19'),
+('DTY0002', 'Certificate', '2019-07-02 10:50:19', '2019-07-07 21:16:41'),
 ('DTY0003', 'Test Answers', '2019-07-02 10:50:19', '2019-07-02 10:50:19'),
-('DTY0004', 'Test Questions', '2019-07-02 10:50:19', '2019-07-02 10:50:19');
+('DTY0004', 'Test Questions', '2019-07-02 10:50:19', '2019-07-02 10:50:19'),
+('DTY0005', 'Others', '2019-07-07 21:17:02', '2019-07-07 21:17:02');
 
 -- --------------------------------------------------------
 
@@ -211,7 +214,9 @@ CREATE TABLE `interview` (
 INSERT INTO `interview` (`interview_id`, `interview_type_id`, `interviewer_id`, `applicant_id`, `interview_venue`, `interview_code`, `interview_score`, `interview_datetime`, `status`, `created_at`, `updated_at`) VALUES
 ('ITV0001', 'ITY0002', 'USR0001', 'APL0001', NULL, 'HNVmBkQO', NULL, '2019-07-04 01:56:00', 'pass', '2019-07-03 11:28:50', '2019-07-04 20:41:26'),
 ('ITV0002', 'ITY0001', 'USR0001', 'APL0002', 'Kantor saya', NULL, 80, '2019-07-05 10:45:00', 'pass', '2019-07-04 20:44:35', '2019-07-04 20:45:43'),
-('ITV0003', 'ITY0001', 'USR0001', 'APL0003', 'kantorrrrr', NULL, 90, '2019-07-05 13:08:00', 'pass', '2019-07-05 09:17:38', '2019-07-05 09:24:49');
+('ITV0003', 'ITY0001', 'USR0001', 'APL0003', 'kantorrrrr', NULL, 90, '2019-07-05 13:08:00', 'pass', '2019-07-05 09:17:38', '2019-07-05 09:24:49'),
+('ITV0004', 'ITY0001', 'USR0001', 'APL0004', 'asdasdasd', NULL, 85, '2019-07-08 11:30:00', 'completed', '2019-07-06 10:58:58', '2019-07-06 11:19:47'),
+('ITV0005', 'ITY0001', 'USR0001', 'APL0005', 'Gedung Wisma Nugra Santana Lantai 16 PT.Dynamo', NULL, 85, '2019-07-08 13:30:00', 'pass', '2019-07-06 20:20:23', '2019-07-06 20:40:43');
 
 -- --------------------------------------------------------
 
@@ -260,7 +265,7 @@ CREATE TABLE `job` (
 --
 
 INSERT INTO `job` (`job_id`, `department_id`, `job_name`, `description`, `salary`, `minimum_age`, `minimum_experience`, `active_date`, `expired_date`, `status`, `created_at`, `updated_at`) VALUES
-('JOB0001', 'DPT0004', 'Marketing Officer', 'Marketing officerrss\r\naasdasd\r\nasdasdasdasdads', 4500000, 25, 2, '2019-07-02', '2019-07-17', 'open', '2019-07-02 11:22:20', '2019-07-02 11:22:20'),
+('JOB0001', 'DPT0004', 'Marketing Officer', 'Marketing officerrss\r\naasdasd\r\nasdasdasdasdads', 4500000, 25, 2, '2019-07-02', '2019-07-17', 'open', '2019-07-02 11:22:20', '2019-07-07 20:29:16'),
 ('JOB0002', 'DPT0008', 'Full Stack Developer', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla imperdiet, mi dignissim dapibus porta, diam urna \r\nrhoncus erat, eget commodo felis quam vel enim.', 9000000, 23, 2, '2019-07-03', '2019-07-06', 'open', '2019-07-03 12:17:30', '2019-07-03 12:17:30'),
 ('JOB0003', 'DPT0009', 'Data Analyst', 'Menganalisa dan input data untuk kelengkapan vendor serta customer', 6500000, 22, 1, '2019-07-06', '2019-08-17', 'open', '2019-07-05 11:28:28', '2019-07-05 11:28:28'),
 ('JOB0004', 'DPT0004', 'Akutansi', 'memeriksa keuangan perusahaan. dan mengatur management keuangan', 5500000, 20, 2, '2019-07-06', '2019-08-06', 'open', '2019-07-05 11:45:25', '2019-07-05 11:45:25');
@@ -285,14 +290,15 @@ CREATE TABLE `job_skill` (
 --
 
 INSERT INTO `job_skill` (`job_skill_id`, `job_id`, `skill_name`, `rate`, `created_at`, `updated_at`) VALUES
-('JSK0001', 'JOB0001', 'Communication', 70, NULL, NULL),
-('JSK0002', 'JOB0001', 'Teamwork', 30, NULL, NULL),
 ('JSK0003', 'JOB0002', 'PHP', 50, NULL, NULL),
 ('JSK0004', 'JOB0002', 'C#', 50, NULL, NULL),
 ('JSK0005', 'JOB0003', 'mysql', 30, NULL, NULL),
 ('JSK0006', 'JOB0003', 'sql', 45, NULL, NULL),
 ('JSK0007', 'JOB0004', 'comunication', 25, NULL, NULL),
-('JSK0008', 'JOB0004', 'marketing', 45, NULL, NULL);
+('JSK0008', 'JOB0004', 'marketing', 45, NULL, NULL),
+('JSK0009', 'JOB0001', 'Communication', 60, NULL, NULL),
+('JSK0010', 'JOB0001', 'Teamwork', 30, NULL, NULL),
+('JSK0011', 'JOB0001', 'Good Looking', 10, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -320,7 +326,9 @@ CREATE TABLE `message` (
 INSERT INTO `message` (`message_id`, `subject`, `body`, `from`, `to`, `is_important`, `attachment_url`, `status`, `created_at`, `updated_at`) VALUES
 ('MSG0001', 'Pengumuman Perubahan Jadwal Interview', 'lorem ipsum dolot sit amet', 'USR0001', 'chen@mail.com, enrico@mail.com', NULL, NULL, 'read', '2019-07-03 18:00:16', '2019-07-03 22:41:19'),
 ('MSG0002', 'asdasdasd', 'asdasdasdasdasdasdasd', 'USR0001', 'chen@mail.com', 'yes', NULL, 'read', '2019-07-03 17:00:00', '2019-07-03 18:35:56'),
-('MSG0003', 'alsdkalskdj', 'akdjaksdlakdsjdsa', 'USR0001', 'chen@mail.com', NULL, NULL, 'read', '2019-07-04 00:50:35', '2019-07-04 02:07:15');
+('MSG0003', 'alsdkalskdj', 'akdjaksdlakdsjdsa', 'USR0001', 'chen@mail.com', NULL, NULL, 'read', '2019-07-04 00:50:35', '2019-07-04 02:07:15'),
+('MSG0004', 'test', 'asdasdasdasdasdasdasdasdasdasdasdasdasd\r\nasdasdasdasdasdasdasd\r\nasdasdasd\r\n\r\nadsasdasd', 'USR0002', 'alim@mail.com', NULL, NULL, 'read', '2019-07-06 10:18:08', '2019-07-06 10:18:14'),
+('MSG0005', 'Testing', 'hai chen', 'USR0001', 'chen@mail.com', NULL, NULL, 'read', '2019-07-06 22:25:50', '2019-07-06 22:26:32');
 
 -- --------------------------------------------------------
 
@@ -444,8 +452,9 @@ INSERT INTO `technical_test` (`technical_test_id`, `applicant_id`, `score_1`, `s
 ('TCT0001', 'APL0001', 80, 90, NULL, NULL, 85, 'pass', '2019-07-02 18:35:12', '2019-07-03 11:28:50'),
 ('TCT0002', 'APL0002', 70, 79, 89, NULL, 79, 'pass', '2019-07-04 06:13:35', '2019-07-04 20:44:34'),
 ('TCT0003', 'APL0003', 90, NULL, 90, NULL, 90, 'pass', '2019-07-04 20:45:52', '2019-07-05 09:17:38'),
-('TCT0004', 'APL0004', NULL, NULL, NULL, NULL, NULL, 'not_tested', '2019-07-05 13:03:26', '2019-07-05 13:03:26'),
-('TCT0005', 'APL0006', NULL, NULL, NULL, NULL, NULL, 'not_tested', '2019-07-05 14:52:22', '2019-07-05 14:52:22');
+('TCT0004', 'APL0004', 90, NULL, NULL, NULL, 90, 'pass', '2019-07-05 13:03:26', '2019-07-06 10:58:58'),
+('TCT0005', 'APL0006', NULL, NULL, NULL, NULL, NULL, 'not_tested', '2019-07-05 14:52:22', '2019-07-05 14:52:22'),
+('TCT0006', 'APL0005', 90, NULL, NULL, NULL, 90, 'pass', '2019-07-06 20:14:35', '2019-07-06 20:20:23');
 
 -- --------------------------------------------------------
 
@@ -479,9 +488,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `email`, `password`, `birth_date`, `birth_place`, `gender`, `phone`, `address`, `university`, `major`, `degree`, `role_id`, `photo_url`, `remember_token`, `created_at`, `updated_at`) VALUES
-('USR0001', 'Alim', 'Rafli', 'alim@mail.com', '$2y$10$RlNwZVdNfgALaCyGAOvyNOB0cedMuXO12x0GOpRSm5rs1KTuCgGPm', '1998-09-25', 'Jakarta', 'Male', '081208120812', 'Jalan Sesama', 'Universitas Bina Nusantara', 'Computer Science', 'S1', 'ROLE001', '/assets/img/users/Alim_RafliUSR0001.jpg', 'xKZdZdfxcgiPfS725f2dfZmPhjXoThSCMqrGlsTUd0CYz6y3iBb14VOWeHCq', '2019-07-03 03:25:32', '2019-07-03 22:00:16'),
-('USR0002', 'Enrico', 'Bortol', 'Enrico@mail.com', '$2y$10$CiH9w97/Qb4wW1kxq/TA0.2ffaNEPdhSVhoCdV9WyRm3Q52qwqquO', '1990-11-27', 'Erfurt', 'Male', '083218903476', '', 'Privredna Akademija (Business Academy)', '', '', 'ROLE002', '', 'EU37OmGciErpbmpg5y6Z1efFxrOWhJLF1Uv2AjuHxa3cy4VmYJvK7W4V8wMO', '2019-07-03 03:25:32', '2019-07-03 03:25:32'),
-('USR0003', 'Chen', 'prayitno', 'Chen@mail.com', '$2y$10$HYtNN4JS.hTq5RPcXAYXueTW1doPDKuvWZL8aUJXJuivpD62NeuLC', '1998-08-25', 'Bekasi', 'Male', '82257761644', 'Jalan timur raya. Rt 04. Rw 03. Nomor 39', 'Universitas Dian Nuswantoro', 'IT', 'S2', 'ROLE002', '', 'dUuu4FGooFZgWe21yI8PceVnNLeTnrJPwyh7AIVil2oDcwlZjA37p5JHzO3R', '2019-07-03 03:25:32', '2019-07-03 00:28:47'),
+('USR0001', 'Alim', 'Rafli', 'alim@mail.com', '$2y$10$RlNwZVdNfgALaCyGAOvyNOB0cedMuXO12x0GOpRSm5rs1KTuCgGPm', '1998-09-25', 'Jakarta', 'Male', '081208120812', 'Jalan Sesama', 'Universitas Bina Nusantara', 'Computer Science', 'S1', 'ROLE001', '/assets/img/users/Alim_RafliUSR0001.jpg', 'IPzBF14K3PIsWwORfZAo169AiWMNAKbSFe7g4M3Kb9NaTpqHbR2dk4DPnE2Q', '2019-07-03 03:25:32', '2019-07-03 22:00:16'),
+('USR0002', 'Enrico', 'Bortol', 'Enrico@mail.com', '$2y$10$CiH9w97/Qb4wW1kxq/TA0.2ffaNEPdhSVhoCdV9WyRm3Q52qwqquO', '1990-11-27', 'Erfurt', 'Male', '083218903476', '', 'Privredna Akademija (Business Academy)', 'IT', 'S3', 'ROLE002', '/assets/img/users/Enrico_BortolUSR0002.jpg', 'EU37OmGciErpbmpg5y6Z1efFxrOWhJLF1Uv2AjuHxa3cy4VmYJvK7W4V8wMO', '2019-07-03 03:25:32', '2019-07-06 00:59:51'),
+('USR0003', 'Chen', 'prayitno', 'Chen@mail.com', '$2y$10$HYtNN4JS.hTq5RPcXAYXueTW1doPDKuvWZL8aUJXJuivpD62NeuLC', '1998-08-25', 'Bekasi', 'Male', '82257761644', 'Jalan timur raya. Rt 04. Rw 03. Nomor 39', 'Universitas Dian Nuswantoro', 'IT', 'S2', 'ROLE002', '', 'NIFNJoYvAiIcLP8jnpyyXGgpGEin1bWc5eCpGkAogDjGVelBtfDzNQ0jmGEY', '2019-07-03 03:25:32', '2019-07-03 00:28:47'),
 ('USR0004', 'Arch', 'Calyton', 'Arch@mail.com', '$2y$10$hbpPZGda88d29YdQUFWP5Oanwvkm2opmAkh33ZtAaH4eG7eOmeQLi', '1996-02-15', 'Chashnikovo', 'Male', '083218903476', '', 'Jarvis Christian College', '', '', 'ROLE002', '', 'opekPYZ9iU1726FV9DDBJFMrtGJAWoJoN3Onk5lKfwqbdEFVhYtySSeG130k', '2019-07-03 03:25:32', '2019-07-03 03:25:32'),
 ('USR0005', 'Melvin', 'Rowlands', 'Melvin@mail.com', '$2y$10$wLS6JQwX7nLWJV9TeAiIt.etLZAwrrJEFdMZBLkeeSF/prbBwcco.', '1997-10-28', 'Hvozdná', 'Male', '083218903476', '', 'Bina Nusantara University', 'IT', 'S1', 'ROLE002', '', 'l6je5bOqQCgseqQnSxFD5xQ9xtMyC1qm5rMmFw8M11FO7cGwY4PPszVAMAbS', '2019-07-03 03:25:32', '2019-07-05 11:01:29'),
 ('USR0006', 'Giffie', 'Cancellieri', 'Giffie@mail.com', '$2y$10$XXRYDlnDXrN3D.R6h.KZqeCwfXRF0uilYCgzH49dJ/aCUluRUVPNq', '1992-11-10', 'Boquira', 'Male', '083218903476', '', 'Bina Nusantara University', 'IT', 'S1', 'ROLE002', '', 'ytlTQ10BFhjnhqmFIzdg4cavl8HGlQDw64acscq36KQAhCOwWoLh90H6ItK6', '2019-07-03 03:25:32', '2019-07-05 10:58:03'),
