@@ -44,7 +44,6 @@
                                     <td>{{$interview->interview_type_name}}</td>
                                     <td>
                                         <a href="{{url('/interview/'.$interview->interview_id)}}" class="btn btn-primary btn-xs"><i class="fa fa-eye"></i></a>
-                                        <button class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button>
                                     </td>
                                 </tr>
                             @endforeach

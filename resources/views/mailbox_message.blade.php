@@ -1,6 +1,49 @@
 @extends('.layout.dashboard_app')
 @section('content')
 
+    <div class="modal fade" id="replyMessage">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title"><i class="fa fa-mail"></i> Reply Message</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                @php($user = \App\User::find($message->from))
+                <form action="{{url("/mailbox/new-message")}}" method="post">
+                {{csrf_field()}}
+                <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="">To</label>
+                            <input type="text" name="to" value="{{$user->email}}" class="form-control" hidden>
+                            <input type="text" placeholder="Receiver" value="{{$user->email}}" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Subject</label>
+                            <input type="text" name="subject" placeholder="Message Subject" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Message Body</label>
+                            <textarea name="body" id="body" cols="40" rows="10" wrap="hard" class="form-control" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="">Attachment</label>
+                            <input type="file" name="attachment" class="form-control">
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="ibox p-20" id="mailbox-container">
         <div class="m-b-20">
@@ -15,7 +58,7 @@
                 <div class="p-r-10 font-13">{{$message->created_at}}</div>
             </div>
             <div class="inbox-toolbar m-l-20">
-                <button class="btn btn-default btn-sm" data-action="reply" data-toggle="tooltip" data-original-title="Reply"><i class="fa fa-reply"></i></button>
+                <button class="btn btn-default btn-sm" data-toggle="modal" data-target="#replyMessage"><i class="fa fa-reply"></i></button>
                 <button class="btn btn-default btn-sm" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-trash-o"></i></button>
                 <button class="btn btn-default btn-sm" data-toggle="tooltip" data-original-title="Mark as important"><i class="fa fa-star-o"></i></button>
             </div>

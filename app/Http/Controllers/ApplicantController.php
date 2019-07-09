@@ -8,6 +8,7 @@ use App\Document;
 use App\Interview;
 use App\InterviewType;
 use App\JobSkill;
+use App\Message;
 use App\TechnicalTest;
 use App\User;
 use App\Job;
@@ -416,6 +417,33 @@ class applicantController extends Controller
                 'session' => 'Invalid code'
             ]);
         }
+    }
+
+    public function InterviewReschedule(Request $request, $id){
+        $interview = Interview::find($id);
+        $interview->interview_date = $request->new_date;
+        $interview->interview_time = $request->new_time;
+        $interview->save();
+
+        $app = DB::table('interview')
+            ->join('applicant', 'applicant.applicant_id', '=', 'interview.applicant_id')
+            ->join('users', 'applicant.user_id', '=', 'users.user_id')
+            ->join('job', 'applicant.job_id', '=', 'job.job_id')
+            ->where('interview_id', '=', $id)
+            ->select('users.email', 'job.job_name')
+            ->first();
+
+        $message = new Message();
+        $message->message_id = GenerateId('message', 'MSG');
+        $message->from = Auth::user()->user_id;
+        $message->to = $app->email;
+        $message->subject = "Interview Has Been Rescheduled";
+        $message->body = "Your interview schedule for job ".$app->job_name." has been rescheduled to ".date('d M y', strtotime($request->new_date)).", ".$request->new_time.".";
+        $message->status = "not_read";
+        $message->save();
+
+        return redirect()->back()->with(['success'=>'Reschedule Success']);
+
     }
 
     public function InterviewSigner(Request $request){

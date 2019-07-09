@@ -28,6 +28,7 @@ Route::get('/mailbox', 'UserController@ShowMailbox');
 Route::post('/add-task', 'UserController@AddTask');
 Route::post('/mailbox/new-message', 'UserController@ComposeMessage');
 Route::get('/mailbox/{id}', 'UserController@ShowMessageDetails');
+Route::get('/mailbox/delete/{id}', 'UserController@DeleteMailbox');
 
 Route::get('/profile', 'UserController@ShowProfile');
 Route::post('/profile/update-info', 'UserController@UpdatePersonalInfo');
@@ -87,6 +88,7 @@ Route::get('/interview/session/{code}', 'ApplicantController@InterviewSession');
 Route::post('/interview/completed/{id}', 'ApplicantController@InterviewCompleted');
 Route::post('/interview/proceed/{id}', 'ApplicantController@InterviewProceed');
 Route::post('/interview/reject/{id}', 'ApplicantController@InterviewReject');
+Route::post('/interview/reschedule/{id}', 'ApplicantController@InterviewReschedule');
 
 Route::post('/interview/signer', 'ApplicantController@InterviewSigner');
 

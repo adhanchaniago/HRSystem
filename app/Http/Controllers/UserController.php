@@ -378,12 +378,15 @@ class UserController extends Controller
         $inbox = DB::table('message')
             ->join('users', 'message.from', '=', 'users.user_id')
             ->where('to', 'like', '%'.Auth::user()->email.'%')
+            ->where('status', '!=', 'deleted')
             ->select('users.first_name', 'users.last_name', 'message.*')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         $sent = DB::table('message')
             ->join('users', 'message.from', '=', 'users.user_id')
             ->where('from', '=', Auth::user()->user_id)
+            ->where('status', '!=', 'deleted')
             ->select('users.first_name', 'users.last_name', 'message.*')
             ->get();
 
@@ -393,6 +396,7 @@ class UserController extends Controller
                 ['to', 'like', '%'.Auth::user()->email.'%'],
                 ['status', '=', 'not_read']
             ])
+            ->where('status', '!=', 'deleted')
             ->select('users.first_name', 'users.last_name', 'users.photo_url', 'message.*')
             ->get();
 
@@ -401,6 +405,14 @@ class UserController extends Controller
             "sents" => $sent,
             "mail_not_read" => $mail_not_read
         ]);
+    }
+
+    public function DeleteMailbox($id){
+        $mail = Message::find($id);
+        $mail->status = "deleted";
+        $mail->save();
+
+        return redirect()->back()->with(['success'=>'Message Deleted']);
     }
 
     public function ComposeMessage(Request $request){
@@ -413,7 +425,7 @@ class UserController extends Controller
         $message->status = "not_read";
         $message->save();
 
-        return redirect()->back()->with([
+        return redirect('/mailbox')->with([
            "success" => "Message Sent!"
         ]);
     }
@@ -421,7 +433,7 @@ class UserController extends Controller
     public function ShowMessageDetails($id){
 
         $msg = Message::find($id);
-        if($msg->status != "read" && strpos($msg->to, Auth::user()->email) != 1){
+        if($msg->status != "read" && $msg->from != Auth::user()->user_id){
             $msg->status = "read";
             $msg->save();
         }

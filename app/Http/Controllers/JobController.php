@@ -450,7 +450,7 @@ class JobController extends Controller
             ->leftJoin('interview', 'applicant.applicant_id', '=', 'interview.applicant_id')
             ->join('department', 'job.department_id', '=', 'department.department_id')
             ->select('applicant.applicant_id', 'applicant.applied_date', 'applicant.current_step', 'applicant.status', 'users.*',
-                'job.job_name', 'job.job_id', 'department.department_name', 'technical_test.technical_test_id', 'interview.interview_id')
+                'job.job_name', 'job.job_id', 'department.department_name', 'technical_test.technical_test_id', 'interview.interview_id', 'interview.interview_date', 'interview.interview_time', 'interview.interview_venue')
             ->where('applicant.applicant_id', '=', $id)
             ->first();
 

@@ -11,11 +11,7 @@
                         <thead>
                         <tr>
                             <th>#</th>
-                            @if(Auth::user()->role_id == 'ROLE001')
-                                <th>Applicant Name</th>
-                            @else
-                                <th>Interviewer Name</th>
-                            @endif
+                            <th>Applicant Name</th>
                             <th>Applied Job</th>
                             <th>Apply Date</th>
                             <th>Actions</th>

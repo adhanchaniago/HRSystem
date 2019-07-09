@@ -97,8 +97,8 @@
                         </li>
                         @if($unread>0)
                             <ul class="list-group list-group-divider list-group-full tasks-list">
-                            @foreach($mail_not_read as $mail)
                                 <li class="list-group list-group-divider scroller" style="max-height: 240px;" data-color="#71808f">
+                                    @foreach($mail_not_read as $mail)
                                     <div>
                                         <a class="list-group-item" href="{{url('/mailbox/'.$mail->message_id)}}">
                                             <div class="media">
@@ -117,8 +117,8 @@
                                             </div>
                                         </a>
                                     </div>
+                                    @endforeach
                                 </li>
-                            @endforeach
                             </ul>
                         @else
                             <li class="list-group list-group-divider scroller" data-color="#71808f">

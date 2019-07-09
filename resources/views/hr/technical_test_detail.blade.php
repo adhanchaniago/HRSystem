@@ -141,30 +141,63 @@
                             </div>
                         </div>
                     </div>
-                    @if($technical->average_score != null)
-                        <div class="text-right m-b-10">
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#interviewConfirm"><i class="fa fa-calendar-o"></i> Set Interview Schedule</button>
-                            <button class="btn btn-danger" data-toggle="modal" data-target="#rejectConfirm"><i class="fa fa-times"></i> Reject</button>
-                        </div>
+                    @if(Auth::user()->role_id == "ROLE001")
+                        @if($technical->average_score != null)
+                            <div class="text-right m-b-10">
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#interviewConfirm"><i class="fa fa-calendar-o"></i> Set Interview Schedule</button>
+                                <button class="btn btn-danger" data-toggle="modal" data-target="#rejectConfirm"><i class="fa fa-times"></i> Reject</button>
+                            </div>
+                        @else
+                            <div class="alert alert-warning">
+                                <i class="fa fa-warning"></i> You must submit score to proceed this applicant to interview phase.
+                            </div>
+                        @endif
                     @else
-                        <div class="alert alert-warning">
-                            <i class="fa fa-warning"></i> You must submit score to proceed this applicant to interview phase.
+                        <div class="text-right m-b-10">
+                            <a href="{{url('/job/applied-jobs/'.$technical->applicant_id)}}" class="btn btn-primary"><i class="fa fa-eye"></i> View My Progress</a>
                         </div>
                     @endif
                 </div>
             </div>
-            <div class="ibox">
-                <div class="ibox-head">
-                    <div class="ibox-title text-info">Applicant Test Scoring</div>
-                    <div class="ibox-tools">
-                        <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+            @if(Auth::user()->role_id == "ROLE001")
+                <div class="ibox">
+                    <div class="ibox-head">
+                        <div class="ibox-title text-info">Applicant Test Scoring</div>
+                        <div class="ibox-tools">
+                            <a class="ibox-collapse"><i class="fa fa-minus"></i></a>
+                        </div>
                     </div>
-                </div>
-                <div class="ibox-body">
-                    @if($technical->average_score == null)
-                        @if(count($approg)>0)
-                            <form action="{{url('/technical-test/update/'.$technical->technical_test_id)}}" method="post">
-                                {{csrf_field()}}
+                    <div class="ibox-body">
+                        @if($technical->average_score == null)
+                            @if(count($approg)>0)
+                                <form action="{{url('/technical-test/update/'.$technical->technical_test_id)}}" method="post">
+                                    {{csrf_field()}}
+                                    <div class="row">
+                                        @foreach($approg as $appr)
+                                            <div class="col-md-12">
+                                                <div class="row m-b-5">
+                                                    <div class="col-md-4">
+                                                        <label for=""><b>{{$appr->progress_name}}</b></label>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <input type="text" name="sequence[]" value="{{$appr->sequence}}" hidden>
+                                                        <input type="number" name="score[]" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-success">Submit Score</button>
+                                    </div>
+                                </form>
+                            @else
+                                <div class="text-center">
+                                    <h6 class="text-muted">There is no technical test for this applicant</h6>
+                                </div>
+                            @endif
+                        @else
+                            @if(count($approg)>0)
                                 <div class="row">
                                     @foreach($approg as $appr)
                                         <div class="col-md-12">
@@ -173,68 +206,43 @@
                                                     <label for=""><b>{{$appr->progress_name}}</b></label>
                                                 </div>
                                                 <div class="col-md-8">
-                                                    <input type="text" name="sequence[]" value="{{$appr->sequence}}" hidden>
-                                                    <input type="number" name="score[]" class="form-control">
+                                                    @php($id = 'score_'.$appr->sequence)
+                                                    <h6>{{ $technical->{$id} }}</h6>
                                                 </div>
                                             </div>
                                         </div>
                                     @endforeach
                                 </div>
-                                <div class="text-right">
-                                    <button class="btn btn-success">Submit Score</button>
+                                <div class="text-right m-20">
+                                    <h6><b>Average Score</b></h6>
+                                    <h3>
+                                        @if($technical->average_score > 80)
+                                            <span id="avgScore" class="text-success">
+                                                {{$technical->average_score}}
+                                            </span>
+                                        @elseif($technical->average_score > 60)
+                                            <span id="avgScore" class="text-warning">
+                                                {{$technical->average_score}}
+                                            </span>
+                                        @else
+                                            <span id="avgScore" class="text-danger">
+                                                {{$technical->average_score}}
+                                            </span>
+                                        @endif
+                                    </h3>
                                 </div>
-                            </form>
-                        @else
-                            <div class="text-center">
-                                <h6 class="text-muted">There is no technical test for this applicant</h6>
-                            </div>
+                                <div class="text-right">
+                                    <a href="{{url('/technical-test/'.$technical->technical_test_id.'/print')}}" target="_blank" class="btn btn-info">Print Test Report</a>
+                                </div>
+                            @else
+                                <div class="text-center">
+                                    <h6 class="text-muted">There is no technical test for this applicant</h6>
+                                </div>
+                            @endif
                         @endif
-                    @else
-                        @if(count($approg)>0)
-                            <div class="row">
-                                @foreach($approg as $appr)
-                                    <div class="col-md-12">
-                                        <div class="row m-b-5">
-                                            <div class="col-md-4">
-                                                <label for=""><b>{{$appr->progress_name}}</b></label>
-                                            </div>
-                                            <div class="col-md-8">
-                                                @php($id = 'score_'.$appr->sequence)
-                                                <h6>{{ $technical->{$id} }}</h6>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                            <div class="text-right m-20">
-                                <h6><b>Average Score</b></h6>
-                                <h3>
-                                    @if($technical->average_score > 80)
-                                        <span id="avgScore" class="text-success">
-                                            {{$technical->average_score}}
-                                        </span>
-                                    @elseif($technical->average_score > 60)
-                                        <span id="avgScore" class="text-warning">
-                                            {{$technical->average_score}}
-                                        </span>
-                                    @else
-                                        <span id="avgScore" class="text-danger">
-                                            {{$technical->average_score}}
-                                        </span>
-                                    @endif
-                                </h3>
-                            </div>
-                            <div class="text-right">
-                                <a href="{{url('/technical-test/'.$technical->technical_test_id.'/print')}}" target="_blank" class="btn btn-info">Print Test Report</a>
-                            </div>
-                        @else
-                            <div class="text-center">
-                                <h6 class="text-muted">There is no technical test for this applicant</h6>
-                            </div>
-                        @endif
-                    @endif
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
         <div class="col-md-7">
             <div class="ibox">
