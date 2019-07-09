@@ -199,7 +199,7 @@
                             <div class="m-b-30">
                                 <h5><b><i class="fa fa-calendar-o"></i> Interview Date</b></h5>
                                 <div class="m-l-25">
-                                    {{$interview->interview_datetime}}
+                                    {{$interview->interview_date.' '.$interview->interview_time}}
                                 </div>
                             </div>
                             <div>

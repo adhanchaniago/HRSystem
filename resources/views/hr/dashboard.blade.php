@@ -11,7 +11,7 @@
                                 <img width="100%" src="/assets/img/checkmark.gif" alt="">
                             </div>
                             <div class="col-md-9" style="display: flex;align-items: center">
-                                <h2 class="text-success">Welcome, Alim!</h2>
+                                <h2 class="text-success">{{Session::get('success')}}!</h2>
                             </div>
                         </div>
                     </div>

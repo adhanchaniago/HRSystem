@@ -18,11 +18,12 @@ class CreateInterviewTable extends Migration
             $table->string('interview_type_id', 7)->nullable(true);
             $table->string('interviewer_id', 7)->nullable(true);
             $table->string('applicant_id', 7)->nullable(true);
-            $table->string('interview_venue', 200)->nullable(true);
-            $table->string('interview_code', 20)->nullable(true);
+            $table->string('interview_venue', 500)->nullable(true);
+            $table->string('interview_code', 11)->nullable(true);
             $table->integer('interview_score')->nullable(true);
-            $table->datetime('interview_datetime');
-            $table->string('status', 20);
+            $table->datetime('interview_date')->nullable(true);
+            $table->datetime('interview_time')->nullable(true);
+            $table->string('status', 10)->nullable(true);
             $table->timestamps();
 
             $table->foreign('interviewer_id')
@@ -33,6 +34,11 @@ class CreateInterviewTable extends Migration
             $table->foreign('applicant_id')
                 ->references('applicant_id')
                 ->on('applicant')
+                ->onDelete('cascade');
+
+            $table->foreign('interview_type_id')
+                ->references('interview_type_id')
+                ->on('interview_type')
                 ->onDelete('cascade');
         });
     }

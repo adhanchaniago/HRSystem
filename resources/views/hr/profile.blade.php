@@ -56,7 +56,7 @@
                                                     <tr>
                                                         <td>{{$idx+1}}</td>
                                                         <td>{{$intv->first_name.' '.$intv->last_name}}</td>
-                                                        <td>{{$intv->interview_datetime}}</td>
+                                                        <td>{{$intv->interview_date.' '.$intv->interview_time}}</td>
                                                         <td>{{$intv->status}}</td>
                                                     </tr>
                                                 @endforeach

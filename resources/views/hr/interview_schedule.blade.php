@@ -38,7 +38,7 @@
                             @foreach($interviews as $idx=>$interview)
                                 <tr>
                                     <td>{{$idx+1}}</td>
-                                    <td>{{$interview->interview_datetime}}</td>
+                                    <td>{{$interview->interview_date.' '.$interview->interview_time}}</td>
                                     <td>{{$interview->first_name.' '.$interview->last_name}}</td>
                                     <td>{{$interview->job_name}}</td>
                                     <td>{{$interview->interview_type_name}}</td>

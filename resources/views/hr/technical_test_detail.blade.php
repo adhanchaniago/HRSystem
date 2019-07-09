@@ -29,9 +29,19 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="">Interview Date & Time</label>
-                            <input type="datetime-local" name="interview_datetime" class="form-control" required>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="">Interview Date</label>
+                                    <input type="date" name="interview_date" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="">Time</label>
+                                    <input type="time" name="interview_time" class="form-control" required>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -229,7 +239,7 @@
         <div class="col-md-7">
             <div class="ibox">
                 <div class="ibox-head">
-                    <div class="ibox-title">Test Result Document</div>
+                    <div class="ibox-title">Test Answer From Applicant</div>
                 </div>
                 <div class="ibox-body">
                     @if(count($documents) > 0)
@@ -254,7 +264,7 @@
                             </tbody>
                         </table>
                     @else
-                        <h6 class="text-muted">This applicant has no document.</h6>
+                        <h6 class="text-muted">This applicant has no answer yet.</h6>
                     @endif
                 </div>
             </div>

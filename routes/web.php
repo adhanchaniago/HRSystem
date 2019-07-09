@@ -88,7 +88,7 @@ Route::post('/interview/completed/{id}', 'ApplicantController@InterviewCompleted
 Route::post('/interview/proceed/{id}', 'ApplicantController@InterviewProceed');
 Route::post('/interview/reject/{id}', 'ApplicantController@InterviewReject');
 
-Route::get('/interview/signer', 'ApplicantController@InterviewSigner');
+Route::post('/interview/signer', 'ApplicantController@InterviewSigner');
 
 
 //Route::post('/interview/session/{code}', 'ApplicantController@InterviewSession');

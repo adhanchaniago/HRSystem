@@ -56,9 +56,13 @@
                                     <h6 class="text-muted"><i class="fa fa-user"></i> {{$member->gender}}</h6>
                                 </div>
                             </div>
-                            @if($member->gain >= 2)
-
+                            @if($member->gain > 0)
                                 <div class="alert alert-success">
+                                    <h4 class="text-warning">
+                                        @for($i=0; $i<$member->gain; $i++)
+                                            <i class="fa fa-star"></i>
+                                        @endfor
+                                    </h4>
                                     <h6><i class="fa fa-check"></i>&nbsp;This Applicant is qualified based on this job criteria.</h6>
                                     <div class="row">
                                         <div class="col-md-3">Skill Score</div>
@@ -179,9 +183,19 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label for="">Interview Date & Time</label>
-                                                        <input type="datetime-local" name="interview_datetime" class="form-control" required>
+                                                    <div class="row">
+                                                        <div class="col-md-8">
+                                                            <div class="form-group">
+                                                                <label for="">Interview Date</label>
+                                                                <input type="date" name="interview_date" class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <div class="form-group">
+                                                                <label for="">Time</label>
+                                                                <input type="time" name="interview_time" class="form-control" required>
+                                                            </div>
+                                                        </div>
                                                     </div>
 
                                                     <div class="form-group">

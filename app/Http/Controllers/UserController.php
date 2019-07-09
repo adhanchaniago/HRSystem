@@ -218,7 +218,7 @@ class UserController extends Controller
         $members = User::all()->where('role_id', '=', 'ROLE002')->count();
         $applicants = Applicant::all()->count();
         $accepted = DB::table('applicant')->where('status', '=', 'accepted')->count();
-        $rejected = DB::table('applicant')->where('status', 'like', '%fail%')->count();
+        $rejected = DB::table('applicant')->where('status', '=', 'rejected')->count();
 
         $task = DB::table('task')->where('user_id', '=', Auth::user()->user_id)
             ->where('task_date', '>', now())
@@ -315,7 +315,8 @@ class UserController extends Controller
                 ->select('users.user_id', 'users.first_name', 'users.last_name', 'users.first_name', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
                 ->where('interviewer_id', '=', Auth::user()->user_id)
                 ->where('interview.status', '=', 'completed')
-                ->orderBy('interview.interview_datetime', 'asc')
+                ->orderBy('interview.interview_date', 'asc')
+                ->orderBy('interview.interview_time', 'asc')
                 ->get();
         }else{
             $interview = DB::table('interview')
@@ -327,7 +328,8 @@ class UserController extends Controller
                 ->select('users.user_id', 'users.first_name', 'users.last_name', 'users.first_name', 'applicant.user_id', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
                 ->where('applicant.user_id', '=', Auth::user()->user_id)
                 ->where('interview.status', '=', 'completed')
-                ->orderBy('interview.interview_datetime', 'asc')
+                ->orderBy('interview.interview_date', 'asc')
+                ->orderBy('interview.interview_time', 'asc')
                 ->get();
         }
 

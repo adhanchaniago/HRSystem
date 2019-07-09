@@ -73,7 +73,13 @@
             </ul>
             <!-- END TOP-LEFT TOOLBAR-->
             <!-- START TOP-RIGHT TOOLBAR-->
-            @php($mail_not_read = DB::table('message')->where([['to', 'like', '%'.Auth::user()->email.'%'], ['status', '=', 'not_read']])->join('users', 'message.from', '=', 'users.user_id')->select('users.first_name', 'users.last_name', 'users.photo_url', 'message.*')->get())
+
+            @php($mail_not_read = DB::table('message')
+            ->where([['to', 'like', '%'.Auth::user()->email.'%'], ['status', '=', 'not_read']])
+            ->join('users', 'message.from', '=', 'users.user_id')
+            ->select('users.first_name', 'users.last_name', 'users.photo_url', 'message.*')
+            ->get())
+
             @php($unread = count($mail_not_read))
             <ul class="nav navbar-toolbar">
                 <li class="dropdown dropdown-inbox">
@@ -104,7 +110,8 @@
                                                     @endif
                                                 </div>
                                                 <div class="media-body">
-                                                    <div class="font-strong">{{$mail->first_name.' '.$mail->last_name}}</div><small class="text-muted float-right">{{$mail->created_at}}</small>
+                                                    <div class="font-strong">{{$mail->first_name.' '.$mail->last_name}}</div>
+                                                    <small class="text-muted float-right">{{$mail->created_at}}</small>
                                                     <div class="font-13">{{$mail->subject}}</div>
                                                 </div>
                                             </div>

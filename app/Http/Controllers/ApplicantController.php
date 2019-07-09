@@ -261,7 +261,8 @@ class applicantController extends Controller
         $interview->interview_type_id = $request->interview_type;
         $interview->interviewer_id = $request->interviewer;
         $interview->applicant_id = $job->applicant_id;
-        $interview->interview_datetime = $request->interview_datetime;
+        $interview->interview_date = $request->interview_date;
+        $interview->interview_time = $request->interview_time;
 
         if($request->interview_type == "ITY0001"){
             $interview->interview_venue = $request->interview_venue;
@@ -316,7 +317,8 @@ class applicantController extends Controller
                 ->select('users.user_id', 'users.first_name', 'users.last_name', 'users.first_name', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
                 ->where('interviewer_id', '=', Auth::user()->user_id)
                 ->where('interview.status', '=', 'scheduled')
-                ->orderBy('interview.interview_datetime', 'asc')
+                ->orderBy('interview.interview_date', 'asc')
+                ->orderBy('interview.interview_time', 'asc')
                 ->get();
         }else{
             $interview = DB::table('interview')
@@ -328,7 +330,8 @@ class applicantController extends Controller
                 ->select('users.user_id', 'users.first_name', 'users.last_name', 'users.first_name', 'applicant.user_id', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
                 ->where('applicant.user_id', '=', Auth::user()->user_id)
                 ->where('interview.status', '=', 'scheduled')
-                ->orderBy('interview.interview_datetime', 'asc')
+                ->orderBy('interview.interview_time', 'asc')
+                ->orderBy('interview.interview_date', 'asc')
                 ->get();
         }
 
@@ -388,16 +391,16 @@ class applicantController extends Controller
         $interview = Interview::all()
             ->where('interview_code', '=', $code)->first();
 
-        $sessionExpired = date('Y-m-d h:i:s', strtotime($interview->interview_datetime . ' + 30 minutes'));
+        $sessionExpired = date('Y-m-d h:i:s', strtotime($interview->interview_date));
         $now = date('Y-m-d h:i:s', strtotime(now() . '- 5 hours'));
 
         if ($interview) {
-            if ($now > date('Y-m-d h:i:s', strtotime($interview->interview_datetime)) && $now < $sessionExpired) {
+            if ($now > date('Y-m-d h:i:s', strtotime($interview->interview_date)) && $now < $sessionExpired) {
                 return view('interview_session')->with([
                     'interview' => $interview,
                     'session' => 'Start'
                 ]);
-            } elseif ($now < date('Y-m-d h:i:s', strtotime($interview->interview_datetime))) {
+            } elseif ($now < date('Y-m-d h:i:s', strtotime($interview->interview_date))) {
                 return view('interview_session')->with([
                     'interview' => $interview,
                     'session' => 'Not started'
@@ -415,9 +418,11 @@ class applicantController extends Controller
         }
     }
 
-    public function InterviewSigner(){
+    public function InterviewSigner(Request $request){
+
+        $token = $request->token;
         $secret = 'W62wB9JjW3tFyUMtF5QhRSbk';
-        $hmac = hash_hmac('sha256', file_get_contents('php://input'), $secret, TRUE);
+        $hmac = hash_hmac('sha256', $token, $secret, TRUE);
         $hmac = base64_encode($hmac);
 
         return $hmac;
@@ -514,29 +519,26 @@ class applicantController extends Controller
             }
             //print "total: ".$totalExp;
 
-            if($na->score >= $jsAvg){
-                $gain++;
-                if($totalExp >= $minExp){
-                    $gain++;
-                    if($age >= $minAge){
-                        $gain++;
-                    }
-                }else{
-                    if($age >= $minAge){
-                        $gain++;
-                    }
-                }
+            if($na->score > $jsAvg){
+                $gain = 3;
+//                if($totalExp >= $minExp){
+//                    $gain++;
+//                    if($age >= $minAge){
+//                        $gain++;
+//                    }
+//                }else{
+//                    if($age >= $minAge){
+//                        $gain++;
+//                    }
+//                }
             }
             else
             {
-                if($totalExp >= $minExp){
-                    $gain++;
-                    if($age >= $minAge){
-                        $gain++;
-                    }
+                if($totalExp > $minExp){
+                    $gain = 2;
                 }else{
-                    if($age >= $minAge){
-                        $gain++;
+                    if($age > $minAge){
+                        $gain = 1;
                     }
                 }
             }

@@ -5,6 +5,8 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width initial-scale=1.0">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
         <title>Admincast | Interview</title>
         <!-- GLOBAL MAINLY STYLES-->
         <link href="/assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -75,23 +77,25 @@
             function onEmbedRequestToSignApiAuthToken(e) {
                 // The below assumes that you have a server-side signer endpoint at /signer,
                 // where you pass e.token in the body of a POST request.
-                fetch('/interview/signer', {
-                    method: 'POST',
-                    body: e.token
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "/interview/signer",
+                    data: {token: e.token},
+                    success: function (data) {
+                        embed.authorize(data);
+                    }
                 })
-                    .then(function(res) {
-                        if (res.status !== 200) {
-                            return;
-                        }
-                        res.text()
-                            .then(function(signature) {
-                                embed.authorize(signature);
-                            });
-                    });
             }
 
             function onEmbedReady(e) {
-                embed.call("{{$interview->interview_code}}", true);
+                embed.call("demo123", true);
             }
 
             function onEmbedStateChange(e) {
