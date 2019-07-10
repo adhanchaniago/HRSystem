@@ -669,4 +669,10 @@ class applicantController extends Controller
             "error" => "No file detected."
         ]);
     }
+
+    public function ShowReport(){
+
+
+        return view ('');
+    }
 }
