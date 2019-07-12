@@ -45,7 +45,7 @@
 </head>
 
 <body class="fixed-navbar">
-<div class="page-wrapper" id="particles-js">
+<div class="page-wrapper">
     <!-- START HEADER-->
     <header class="header">
         <div class="page-brand">
