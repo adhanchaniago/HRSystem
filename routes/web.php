@@ -22,6 +22,7 @@ Route::post('/register', 'UserController@UserRegister');
 
 Route::get('/logout', 'UserController@UserLogout');
 
+Route::get('/career', 'UserController@ShowCareer');
 
 Route::get('/dashboard', 'UserController@ShowDashboard');
 

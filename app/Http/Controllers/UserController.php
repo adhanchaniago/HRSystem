@@ -64,6 +64,15 @@ class UserController extends Controller
         return redirect('/login');
     }
 
+    public function ShowCareer(){
+
+        $jobs = Job::all();
+
+        return view('career')->with([
+            'jobs' => $jobs
+        ]);
+    }
+
     public function UpdatePersonalInfo(Request $request){
 
         $rules = [
