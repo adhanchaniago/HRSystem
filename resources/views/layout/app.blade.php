@@ -8,7 +8,7 @@
     <title>Talent Finder</title>
     <link rel="stylesheet" href="/assets/css/style.css">
     <link href="/assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-
+    <link href="/assets/css/animate.css" rel="stylesheet" />
 
     <script src="/assets/vendors/jquery/dist/jquery.min.js" type="text/javascript"></script>
     <script src="/assets/vendors/popper.js/dist/umd/popper.min.js" type="text/javascript"></script>
@@ -23,19 +23,19 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Solutions <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="#tab-1" data-toggle="tab">Solutions <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Product</a>
+                <a class="nav-link" href="#tab-2" data-toggle="tab">Product</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">About Us</a>
+                <a class="nav-link" href="#tab-3" data-toggle="tab">About Us</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Contact Us</a>
+                <a class="nav-link" href="#tab-4" data-toggle="tab">Contact Us</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{url('/career')}}">Career</a>
+                <a class="nav-link" href="#tab-5" data-toggle="tab">Career</a>
             </li>
         </ul>
     </div>

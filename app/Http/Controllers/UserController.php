@@ -7,6 +7,7 @@ use App\Document;
 use App\DocumentType;
 use App\Interview;
 use App\Job;
+use App\JobSkill;
 use App\Message;
 use App\Task;
 use App\UserEducation;
@@ -21,6 +22,24 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     //
+
+    public function ShowHome(){
+        $job = DB::table('job')
+            ->join('department', 'job.department_id', '=', 'department.department_id')
+            ->select('job.job_id', 'job.department_id', 'department.department_name', 'job.job_name',
+                'job.description', 'job.active_date', 'job.expired_date')
+            ->where('job.status', '=', 'open')
+            ->where('job.active_date', '<=', now())
+            ->where('job.expired_date', '>', now())
+            ->get();
+
+        $jobSkill = JobSkill::all();
+        return view('welcome')->with([
+            "jobs"=>$job,
+            "jobSkills" => $jobSkill
+        ]);
+    }
+
     public function userSignIn(Request $request){
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){
             return redirect('/dashboard')->with(['success'=>'Welcome, '.Auth::user()->first_name]);

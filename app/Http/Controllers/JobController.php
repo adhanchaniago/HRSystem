@@ -239,10 +239,12 @@ class JobController extends Controller
     public function ShowApplicantByJob()
     {
         $job = Job::all();
-
         $tempApplicant = array();
 
-        $totalScore = 0;
+        $scoreWeight = 0.5;
+        $expWeight = 0.3;
+        $ageWeight = 0.2;
+
         foreach ($job as $jb) {
             $jobSkills = JobSkill::all()->where('job_id', '=', $jb->job_id);
             $applicant = DB::table('applicant')
@@ -255,18 +257,34 @@ class JobController extends Controller
                 ->get();
 
             foreach ($applicant as $app) {
+
                 $skillName = $app->skill_name;
                 $skillRate = $app->rate;
 
                 $score = 100;
                 $totalScore = 0;
-                //$otherSkillScore = 0;
                 $jobRate = 0;
+
+                $experience = UserExperience::all()->where('user_id', '=', $app->user_id);
+                $diff = abs(strtotime(now()) - strtotime($app->birth_date));
+                $age = floor($diff / (365*60*60*24));
+                $totalExp = 0;
+
+                foreach($experience as $exp){
+                    $date1 = strtotime($exp->period_start);
+                    $date2 = strtotime($exp->period_end);
+
+                    // Formulate the Difference between two dates
+                    $diff = abs($date2 - $date1);
+
+                    //calculate total years
+                    $years = floor($diff / (365*60*60*24));
+                    $totalExp += $years;
+                }
+
                 foreach ($jobSkills as $jbs) {
                     if ($jbs->skill_name == $skillName) {
-                        //$totalScore += $skillRate*
                         $jobRate += $jbs->rate;
-                        //break;
                     }
                     $score -= $jbs->rate;
                 }
@@ -280,12 +298,13 @@ class JobController extends Controller
                         $totalScore += $skillRate * 1;
                     }
                 }
+
+                $app->totalExp = $totalExp;
+                $app->age = $age;
                 $app->score = $totalScore;
                 array_push($tempApplicant,$app);
-
             }
         }
-
 
         $new_arr = [];
         $new_arr = $this->SumScoreByApplicantId($tempApplicant);
@@ -294,10 +313,33 @@ class JobController extends Controller
         usort($new_arr, function ($a, $b) {
             return  $b->score - $a->score;
         });
+        $maxScore = array_first($new_arr)->score;
+
+        usort($new_arr, function ($a, $b) {
+            return  $b->age - $a->age;
+        });
+        $maxAge = array_first($new_arr)->age;
+
+        usort($new_arr, function ($a, $b) {
+            return  $b->totalExp - $a->totalExp;
+        });
+        $maxExp = array_first($new_arr)->totalExp;
+
+        //print ("max score: ".$maxScore." max age: ".$maxAge." max exp: ".$maxExp);
+
+        $sorted_arr = array();
+        foreach ($new_arr as $na){
+            $na->matrixR = (($na->score/$maxScore)*$scoreWeight) + (($na->totalExp/$maxExp)*$expWeight) + (($na->age/$maxAge)*$ageWeight);
+            array_push($sorted_arr, $na);
+        }
+
+        usort($sorted_arr, function ($a, $b) {
+            return  $b->matrixR > $a->matrixR ? 1 : -1;
+        });
 
         return view('hr.applicant_screening')->with([
             'jobs' => $job,
-            'applicants' => $new_arr
+            'applicants' => $sorted_arr
         ]);
     }
 

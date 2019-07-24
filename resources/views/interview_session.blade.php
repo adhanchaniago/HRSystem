@@ -41,9 +41,21 @@
     </head>
 
     <body class="fixed-navbar">
-        <div class="page-wrapper">
-            <div id="myembed"></div>
-        </div>
+
+        @if($status)
+            @if($status == "start")
+                <div class="page-wrapper">
+                    <div id="myembed"></div>
+                </div>
+            @elseif($status == "not started")
+
+            @elseif($status == "expired")
+
+            @elseif($status == "invalid code")
+
+            @endif
+        @endif
+
 
         <script>
             var clientId = "demo";
@@ -67,7 +79,9 @@
                     .on("error", onEmbedError)
                     .on("requestToSignApiAuthToken", onEmbedRequestToSignApiAuthToken)
                     .on("ready", onEmbedReady)
-                    .on("stateChange", onEmbedStateChange);
+                    .on("stateChange", onEmbedStateChange)
+                    .on("hangup", onHangUp);
+
             }
 
             function onEmbedError(e) {
@@ -98,12 +112,21 @@
                 embed.call("demo123", true);
             }
 
+            function onHangUp(e) {
+                alert("hangup");
+            }
+
             function onEmbedStateChange(e) {
-                if (e.state == "call") {
-                    setTimeout(function() {
-                        console.log("10 seconds have passed");
-                    }, 10000);
+                if (e.state == "call")
+                {
+                    console.log("calling");
                 }
+                else if(e.state == "ready")
+                {
+                    var role = "{{Auth::user()->role_id}}";
+                    alert("action for role: " + role);
+                }
+                //alert(embed.getState());
             }
         </script>
     </body>

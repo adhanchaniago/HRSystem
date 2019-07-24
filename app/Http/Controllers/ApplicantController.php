@@ -158,6 +158,8 @@ class applicantController extends Controller
         return redirect('/job/applied-jobs');
     }
 
+
+
     public function TechnicalTestDetail($id){
 
         $interviewer = User::all()->where('role_id', '=', 'ROLE001');
@@ -281,9 +283,11 @@ class applicantController extends Controller
         ]);
     }
 
+
+
     public function InterviewDetail($id){
 
-        $interviews = DB::table('interview')//
+        $interview = DB::table('interview')//
             ->join('interview_type', 'interview_type.interview_type_id', '=', 'interview.interview_type_id')
             ->join('applicant', 'applicant.applicant_id', '=', 'interview.applicant_id')
             ->join('technical_test', 'applicant.applicant_id', '=', 'technical_test.applicant_id')
@@ -295,14 +299,24 @@ class applicantController extends Controller
             ->where('interview.interview_id', '=', $id)
             ->first();
 
-        $approg = DB::table('application_progress')->where('job_id', '=', $interviews->job_id)->orderBy('sequence', 'asc')->get();
+        $interviewTime = $interview->interview_time;
+        $sessionStart = date('Y-m-d h:i:s', strtotime($interview->interview_date.' '.$interviewTime));
+        $sessionExpired = date('Y-m-d h:i:s', strtotime($interview->interview_date.' '.$interviewTime . '+ 30 minutes'));
+        $now = date('Y-m-d h:i:s', strtotime(now() . '- 5 hours'));
+
+        $approg = DB::table('application_progress')->where('job_id', '=', $interview->job_id)->orderBy('sequence', 'asc')->get();
 //        $experience = UserExperience::all()->where('user_id', '=', $interviews->user_id);
 //        $education = UserEducation::all()->where('user_id', '=', $interviews->user_id);
 //        $skill = UserSkill::all()->where('user_id', '=', $interviews->user_id);
 
+        $rescheduleMinTime = date('Y-m-d h:i:s', strtotime($interview->interview_date.' '.$interviewTime.' - 30 minutes'));
         return view('hr.interview_detail')->with([
-            "interview" => $interviews,
+            "interview" => $interview,
             "approg" => $approg,
+            'start_date' => $sessionStart,
+            'expired_date' => $sessionExpired,
+            'rescheduleMinTime' => $rescheduleMinTime,
+            'now' => $now
         ]);
     }
 
@@ -340,7 +354,6 @@ class applicantController extends Controller
             "interviews"=>$interview
         ]);
     }
-
 
     public function InterviewCompleted(Request $request, $id){
         $interview = Interview::find($id);
@@ -392,29 +405,42 @@ class applicantController extends Controller
         $interview = Interview::all()
             ->where('interview_code', '=', $code)->first();
 
-        $sessionExpired = date('Y-m-d h:i:s', strtotime($interview->interview_date));
+        $interviewTime = $interview->interview_time;
+        $sessionStart = date('Y-m-d h:i:s', strtotime($interview->interview_date.' '.$interviewTime));
+        $sessionExpired = date('Y-m-d h:i:s', strtotime($interview->interview_date.' '.$interviewTime . '+ 30 minutes'));
         $now = date('Y-m-d h:i:s', strtotime(now() . '- 5 hours'));
 
         if ($interview) {
-            if ($now > date('Y-m-d h:i:s', strtotime($interview->interview_date)) && $now < $sessionExpired) {
+            if ($now > $sessionStart && $now < $sessionExpired) {
                 return view('interview_session')->with([
                     'interview' => $interview,
-                    'session' => 'Start'
+                    'status' => 'start',
+                    'start_date' => $sessionStart,
+                    'expired_date' => $sessionExpired,
+                    'now' => $now
                 ]);
-            } elseif ($now < date('Y-m-d h:i:s', strtotime($interview->interview_date))) {
+            } elseif ($now < $sessionStart) {
                 return view('interview_session')->with([
                     'interview' => $interview,
-                    'session' => 'Not started'
+                    'status' => 'not started',
+                    'start_date' => $sessionStart,
+                    'expired_date' => $sessionExpired,
+                    'now' => $now
                 ]);
             } elseif ($now > $sessionExpired) {
                 return view('interview_session')->with([
                     'interview' => $interview,
-                    'session' => 'Expired'
+                    'status' => 'expired',
+                    'start_date' => $sessionStart,
+                    'expired_date' => $sessionExpired,
+                    'now' => $now
                 ]);
+            }else{
+
             }
         } else {
             return view('interview_session')->with([
-                'session' => 'Invalid code'
+                'status' => 'invalid code'
             ]);
         }
     }
@@ -457,7 +483,12 @@ class applicantController extends Controller
     }
 
 
+
     public function CompareApplicant(Request $request, $id){
+
+
+        //CHANGE THIS TO SIMPLE ADDITIVE WEIGHTING
+
 
         $interviewer = User::all()->where('role_id', '=', 'ROLE001');
         $intvMethod = InterviewType::all();
@@ -515,7 +546,6 @@ class applicantController extends Controller
             $minJobScore = $minJobScore + $jrate;
         }
 
-
         $new_arr = [];
         $new_arr = $this->SumScoreByApplicantId($tempApplicant);
 
@@ -524,11 +554,10 @@ class applicantController extends Controller
             return  $b->score - $a->score;
         });
 
-        $jsAvg = $minJobScore;//count($applicant);
+        $jsAvg = $minJobScore;
         foreach ($new_arr as $idx => $na){
             $gain = 0;
             $experience = UserExperience::all()->where('user_id', '=', $na->user_id);
-            //$userAge = now('')
             $diff = abs(strtotime(now()) - strtotime($na->birth_date));
             $age = floor($diff / (365*60*60*24));
             $totalExp = 0;
@@ -538,27 +567,13 @@ class applicantController extends Controller
 
                 // Formulate the Difference between two dates
                 $diff = abs($date2 - $date1);
-
-                // To get the year divide the resultant date into
-                // total seconds in a year (365*60*60*24)
+                //calculate total years
                 $years = floor($diff / (365*60*60*24));
                 $totalExp += $years;
-                //print $years."+";
             }
-            //print "total: ".$totalExp;
 
             if($na->score > $jsAvg){
                 $gain = 3;
-//                if($totalExp >= $minExp){
-//                    $gain++;
-//                    if($age >= $minAge){
-//                        $gain++;
-//                    }
-//                }else{
-//                    if($age >= $minAge){
-//                        $gain++;
-//                    }
-//                }
             }
             else
             {

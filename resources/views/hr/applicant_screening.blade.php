@@ -45,7 +45,7 @@
                                                         <td>#{{$totalJob}}</td>
                                                         <td>{{$app->first_name.' '.$app->last_name}}</td>
                                                         <td>{{$app->applied_date}}</td>
-                                                        <td>{{$app->score}}</td>
+                                                        <td>{{$app->matrixR}}</td>
                                                     </tr>
                                                 @endif
                                             @endif

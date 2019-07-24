@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/', function () {return view('welcome');});
+Route::get('/', 'UserController@ShowHome');
 
 //Auth Route
 Route::get('/login', function(){return view('auth.login');});
