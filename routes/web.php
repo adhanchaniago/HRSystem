@@ -104,6 +104,7 @@ Route::post('/interview/completed/{id}', 'ApplicantController@InterviewCompleted
 Route::post('/interview/proceed/{id}', 'ApplicantController@InterviewProceed');
 Route::post('/interview/reject/{id}', 'ApplicantController@InterviewReject');
 Route::post('/interview/reschedule/{id}', 'ApplicantController@InterviewReschedule');
+Route::post('interview/complete-online', 'ApplicantController@InterviewCompleteOnline');
 
 
 Route::post('/interview/signer', 'ApplicantController@InterviewSigner');

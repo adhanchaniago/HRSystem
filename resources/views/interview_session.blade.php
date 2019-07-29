@@ -44,6 +44,39 @@
 
         @if($status)
             @if($status == "start")
+                @if(Auth::user()->role_id == "ROLE001")
+
+                    <div class="modal fade" id="completeConfirm" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title"><i class="fa fa-check"></i> Complete Interview</h4>
+                                </div>
+
+                                <form action="{{url('/interview/complete-online')}}" method="post">
+                                {{csrf_field()}}
+                                <!-- Modal body -->
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label for="">Interview Score</label>
+                                            <input type="number" class="form-control" name="interview_score" max="100" min="0">
+                                            <input type="text" id="interviewId" name="interviewId" value="{{$interview->interview_id}}" hidden>
+                                        </div>
+                                    </div>
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Complete</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="completeIntv" class="btn btn-primary" data-toggle="modal" data-target="#completeConfirm">set complete</button>
+                @else
+                    <button id="completeIntv" class="btn btn-primary" data-href="{{url('/job/applied-jobs/'.$interview->applicant_id)}}">move</button>
+                @endif
                 <div class="page-wrapper">
                     <div id="myembed"></div>
                 </div>
@@ -66,6 +99,14 @@
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
             var embed;
+
+            var onCompleteRedirect = $("#completeIntv").attr("data-href");
+            if( onCompleteRedirect !== ""){
+                $("#completeIntv").click(function () {
+                    window.open(onCompleteRedirect, "_self");
+                });
+            }
+
             function onVideolaEmbedAPIReady() {
                 embed = new Videola.Embed("myembed", {
                     responsive: 1,
@@ -113,7 +154,7 @@
             }
 
             function onHangUp(e) {
-                alert("hangup");
+                //$("#completeIntv").click();
             }
 
             function onEmbedStateChange(e) {
@@ -121,10 +162,10 @@
                 {
                     console.log("calling");
                 }
-                else if(e.state == "ready")
+
+                if(e.state == "ready")
                 {
-                    var role = "{{Auth::user()->role_id}}";
-                    alert("action for role: " + role);
+                    $("#completeIntv").click();
                 }
                 //alert(embed.getState());
             }

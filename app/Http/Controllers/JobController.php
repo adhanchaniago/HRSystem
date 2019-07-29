@@ -236,6 +236,8 @@ class JobController extends Controller
         ]);
     }
 
+
+
     public function ShowApplicantByJob()
     {
         $job = Job::all();
@@ -356,6 +358,8 @@ class JobController extends Controller
         return $groups;
     }
 
+
+
     public function AddApplicationProgress(Request $request, $id){
 
         $sequenceCheck = true;
@@ -439,6 +443,8 @@ class JobController extends Controller
 
     }
 
+
+
     public function ShowTechnicalTest(){
 
         if (Auth::user()->role_id == 'ROLE001') {
@@ -514,6 +520,8 @@ class JobController extends Controller
                 "progress" => $progress
             ]);
     }
+
+
 
     public function ShowAllDepartment(){
         $dept = Department::all();

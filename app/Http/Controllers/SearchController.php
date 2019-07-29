@@ -11,8 +11,6 @@ class SearchController extends Controller
     public function SearchData(Request $request){
 
 
-
-
         if($request->tableName == "waitingList")
         {
             $app = DB::table('applicant')

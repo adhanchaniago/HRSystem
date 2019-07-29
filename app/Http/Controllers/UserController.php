@@ -23,7 +23,8 @@ class UserController extends Controller
 {
     //
 
-    public function ShowHome(){
+    public function ShowHome()
+    {
         $job = DB::table('job')
             ->join('department', 'job.department_id', '=', 'department.department_id')
             ->select('job.job_id', 'job.department_id', 'department.department_name', 'job.job_name',
@@ -35,7 +36,7 @@ class UserController extends Controller
 
         $jobSkill = JobSkill::all();
         return view('welcome')->with([
-            "jobs"=>$job,
+            "jobs" => $job,
             "jobSkills" => $jobSkill
         ]);
     }
@@ -82,6 +83,114 @@ class UserController extends Controller
         $request->session()->flush();
         return redirect('/login');
     }
+
+    public function ShowDashboard(){
+
+        $members = User::all()->where('role_id', '=', 'ROLE002')->count();
+        $applicants = Applicant::all()->count();
+        $accepted = DB::table('applicant')->where('status', '=', 'accepted')->count();
+        $rejected = DB::table('applicant')->where('status', '=', 'rejected')->count();
+
+        $task = DB::table('task')->where('user_id', '=', Auth::user()->user_id)
+            ->where('task_date', '>', now())
+            ->orderBy('task_date', 'asc')
+            ->limit(5)->get();
+
+        $referals = DB::table('applicant')
+            ->join('users', 'applicant.user_id', '=', 'users.user_id')
+            ->join('job', 'applicant.job_id', '=', 'job.job_id')
+            ->join('department', 'job.department_id', '=', 'department.department_id')
+            ->select('applicant.applied_date', 'applicant.status', 'applicant.current_step','users.first_name', 'users.last_name', 'job.job_name', 'department.department_name')
+            ->where('recruiter_id', '=', Auth::user()->user_id)
+            ->get();
+
+        $newJob = DB::table('job')
+            //->where('expired_date', '>', now())
+            ->join('department', 'job.department_id','=','department.department_id')
+            ->select('job.*', 'department.department_name')
+            ->where('job.status', '=', 'open')
+            ->where('job.active_date', '<=', now('Asia/Jakarta'))
+            ->where('job.expired_date', '>=', now('Asia/Jakarta'))
+            ->orderBy('job.created_at', 'desc')
+            ->limit(4)
+            ->get();
+
+        $applicant = DB::table('applicant')
+            ->join('users', 'applicant.user_id', '=', 'users.user_id')
+            ->join('job', 'applicant.job_id', '=', 'job.job_id')
+            ->join('department', 'job.department_id', '=', 'department.department_id')
+            ->select('applicant.applied_date', 'applicant.status', 'applicant.current_step', 'users.*','job.job_name', 'department.department_name')
+            ->where('applicant.user_id', '=', Auth::user()->user_id)
+            ->get();
+
+        $inbox = DB::table('message')
+            ->join('users', 'message.from', '=', 'users.user_id')
+            ->where('to', 'like', '%'.Auth::user()->email.'%')
+            ->select('users.first_name', 'users.last_name', 'users.photo_url', 'message.*')
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        return view('hr.dashboard')->with([
+            "referals" => $referals,
+            "jobs" => $newJob,
+            "applications" => $applicant,
+            "members" => $members,
+            "applicants" => $applicants,
+            "accepted" => $accepted,
+            "rejected" => $rejected,
+            "tasks" => $task,
+            "inbox" => $inbox
+        ]);
+    }
+
+    public function ShowProfile(){
+        $id = Auth::user()->user_id;
+        $documents = Document::all()->where('regarding_id', '=', $id);
+        $experience = UserExperience::all()->where('user_id', '=', $id);
+        $education = UserEducation::all()->where('user_id', '=', $id);
+        $skill = UserSkill::all()->where('user_id', '=', $id);
+        $docType = DocumentType::all();
+
+        if (Auth::user()->role_id == 'ROLE001'){
+            $interview = DB::table('interview')
+                ->join('interview_type', 'interview.interview_type_id', '=', 'interview_type.interview_type_id')
+                ->join('applicant', 'applicant.applicant_id', '=', 'interview.applicant_id')
+                ->join('job', 'job.job_id', '=', 'applicant.job_id')
+                ->join('department', 'department.department_id', '=', 'job.department_id')
+                ->join('users', 'users.user_id', '=', 'applicant.user_id')
+                ->select('users.user_id', 'users.first_name', 'users.last_name', 'users.first_name', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
+                ->where('interviewer_id', '=', Auth::user()->user_id)
+                ->where('interview.status', '=', 'completed')
+                ->orderBy('interview.interview_date', 'asc')
+                ->orderBy('interview.interview_time', 'asc')
+                ->get();
+        }else{
+            $interview = DB::table('interview')
+                ->join('interview_type', 'interview.interview_type_id', '=', 'interview_type.interview_type_id')
+                ->join('applicant', 'applicant.applicant_id', '=', 'interview.applicant_id')
+                ->join('job', 'job.job_id', '=', 'applicant.job_id')
+                ->join('department', 'department.department_id', '=', 'job.department_id')
+                ->join('users', 'users.user_id', '=', 'interview.interviewer_id')
+                ->select('users.user_id', 'users.first_name', 'users.last_name', 'users.first_name', 'applicant.user_id', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
+                ->where('applicant.user_id', '=', Auth::user()->user_id)
+                ->where('interview.status', '=', 'completed')
+                ->orderBy('interview.interview_date', 'asc')
+                ->orderBy('interview.interview_time', 'asc')
+                ->get();
+        }
+
+        return view('hr.profile')->with([
+            'documents' => $documents,
+            'experiences' => $experience,
+            'educations' => $education,
+            'skills' => $skill,
+            'docType' => $docType,
+            'interview' => $interview
+        ]);
+    }
+
+
 
     public function ShowCareer(){
 
@@ -168,6 +277,8 @@ class UserController extends Controller
 
     }
 
+
+
     public function AddExperience($request){
 
         DB::table('user_experience')->where('user_id', '=', Auth::user()->user_id)->delete();
@@ -241,65 +352,20 @@ class UserController extends Controller
         UserSkill::insert($sk);
     }
 
-    public function ShowDashboard(){
+    public function AddTask(Request $request){
+        $task = new Task();
+        $task->task_id = GenerateId('task', 'TSK');
+        $task->user_id = Auth::user()->user_id;
+        $task->task_description = $request->task_desc;
+        $task->task_date = $request->task_date;
+        $task->save();
 
-        $members = User::all()->where('role_id', '=', 'ROLE002')->count();
-        $applicants = Applicant::all()->count();
-        $accepted = DB::table('applicant')->where('status', '=', 'accepted')->count();
-        $rejected = DB::table('applicant')->where('status', '=', 'rejected')->count();
-
-        $task = DB::table('task')->where('user_id', '=', Auth::user()->user_id)
-            ->where('task_date', '>', now())
-            ->orderBy('task_date', 'asc')
-            ->limit(5)->get();
-
-        $referals = DB::table('applicant')
-            ->join('users', 'applicant.user_id', '=', 'users.user_id')
-            ->join('job', 'applicant.job_id', '=', 'job.job_id')
-            ->join('department', 'job.department_id', '=', 'department.department_id')
-            ->select('applicant.applied_date', 'applicant.status', 'applicant.current_step','users.first_name', 'users.last_name', 'job.job_name', 'department.department_name')
-            ->where('recruiter_id', '=', Auth::user()->user_id)
-            ->get();
-
-        $newJob = DB::table('job')
-            //->where('expired_date', '>', now())
-                ->join('department', 'job.department_id','=','department.department_id')
-            ->select('job.*', 'department.department_name')
-            ->where('job.status', '=', 'open')
-            ->where('job.active_date', '<=', now('Asia/Jakarta'))
-            ->where('job.expired_date', '>=', now('Asia/Jakarta'))
-            ->orderBy('job.created_at', 'desc')
-            ->limit(4)
-            ->get();
-
-        $applicant = DB::table('applicant')
-            ->join('users', 'applicant.user_id', '=', 'users.user_id')
-            ->join('job', 'applicant.job_id', '=', 'job.job_id')
-            ->join('department', 'job.department_id', '=', 'department.department_id')
-            ->select('applicant.applied_date', 'applicant.status', 'applicant.current_step', 'users.*','job.job_name', 'department.department_name')
-            ->where('applicant.user_id', '=', Auth::user()->user_id)
-            ->get();
-
-        $inbox = DB::table('message')
-            ->join('users', 'message.from', '=', 'users.user_id')
-            ->where('to', 'like', '%'.Auth::user()->email.'%')
-            ->select('users.first_name', 'users.last_name', 'users.photo_url', 'message.*')
-            ->orderBy('created_at', 'desc')
-            ->limit(10)
-            ->get();
-
-        return view('hr.dashboard')->with([
-            "referals" => $referals,
-            "jobs" => $newJob,
-            "applications" => $applicant,
-            "members" => $members,
-            "applicants" => $applicants,
-            "accepted" => $accepted,
-            "rejected" => $rejected,
-            "tasks" => $task,
-            "inbox" => $inbox
+        return redirect()->back()->with([
+            "success" => "Success Add New Task"
         ]);
     }
+
+
 
     public function ShowAllMember(){
         $members = User::all()->where('role_id', '=', 'ROLE002');
@@ -325,52 +391,6 @@ class UserController extends Controller
         ]);
     }
 
-    public function ShowProfile(){
-        $id = Auth::user()->user_id;
-        $documents = Document::all()->where('regarding_id', '=', $id);
-        $experience = UserExperience::all()->where('user_id', '=', $id);
-        $education = UserEducation::all()->where('user_id', '=', $id);
-        $skill = UserSkill::all()->where('user_id', '=', $id);
-        $docType = DocumentType::all();
-
-        if (Auth::user()->role_id == 'ROLE001'){
-            $interview = DB::table('interview')
-                ->join('interview_type', 'interview.interview_type_id', '=', 'interview_type.interview_type_id')
-                ->join('applicant', 'applicant.applicant_id', '=', 'interview.applicant_id')
-                ->join('job', 'job.job_id', '=', 'applicant.job_id')
-                ->join('department', 'department.department_id', '=', 'job.department_id')
-                ->join('users', 'users.user_id', '=', 'applicant.user_id')
-                ->select('users.user_id', 'users.first_name', 'users.last_name', 'users.first_name', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
-                ->where('interviewer_id', '=', Auth::user()->user_id)
-                ->where('interview.status', '=', 'completed')
-                ->orderBy('interview.interview_date', 'asc')
-                ->orderBy('interview.interview_time', 'asc')
-                ->get();
-        }else{
-            $interview = DB::table('interview')
-                ->join('interview_type', 'interview.interview_type_id', '=', 'interview_type.interview_type_id')
-                ->join('applicant', 'applicant.applicant_id', '=', 'interview.applicant_id')
-                ->join('job', 'job.job_id', '=', 'applicant.job_id')
-                ->join('department', 'department.department_id', '=', 'job.department_id')
-                ->join('users', 'users.user_id', '=', 'interview.interviewer_id')
-                ->select('users.user_id', 'users.first_name', 'users.last_name', 'users.first_name', 'applicant.user_id', 'job.job_name', 'department.department_name', 'interview_type.interview_type_name', 'interview.*')
-                ->where('applicant.user_id', '=', Auth::user()->user_id)
-                ->where('interview.status', '=', 'completed')
-                ->orderBy('interview.interview_date', 'asc')
-                ->orderBy('interview.interview_time', 'asc')
-                ->get();
-        }
-
-        return view('hr.profile')->with([
-            'documents' => $documents,
-            'experiences' => $experience,
-            'educations' => $education,
-            'skills' => $skill,
-            'docType' => $docType,
-            'interview' => $interview
-        ]);
-    }
-
     public function CompareMember(Request $request){
 
         $member = User::all()->whereIn('user_id', $request->member);
@@ -388,18 +408,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function AddTask(Request $request){
-        $task = new Task();
-        $task->task_id = GenerateId('task', 'TSK');
-        $task->user_id = Auth::user()->user_id;
-        $task->task_description = $request->task_desc;
-        $task->task_date = $request->task_date;
-        $task->save();
 
-        return redirect()->back()->with([
-            "success" => "Success Add New Task"
-        ]);
-    }
 
     public function ShowMailbox(){
 
